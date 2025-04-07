@@ -9,6 +9,7 @@ import CreateAccountPage from './pages/CreateAccountPage'
 function App() {
   return (
     <>
+
     <Router>
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
@@ -19,6 +20,7 @@ function App() {
         <Route path='/ProductDetail' element={<AdminMoviePage/>}></Route>
       </Routes>
     </Router>
+    
     </>
   )
 }
