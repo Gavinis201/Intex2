@@ -125,3 +125,4 @@
 /Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/obj/Debug/net8.0/Intex2.pdb
 /Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/obj/Debug/net8.0/Intex2.genruntimeconfig.cache
 /Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/obj/Debug/net8.0/ref/Intex2.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/obj/Debug/net8.0/Intex2.sourcelink.json

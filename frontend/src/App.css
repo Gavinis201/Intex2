@@ -1,15 +1,20 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 
+
+
+#root {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  /* padding: 2rem; */
+  /* text-align: center; */
+  --primary-purple: #6A00FC;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
+  
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
@@ -39,4 +44,40 @@
 
 .read-the-docs {
   color: #888;
+}
+.admin-movies-search-container{
+  display: flex;
+}
+
+.add-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+.add-button-styles{
+  white-space: nowrap;
+  padding: 10px 25px;
+  margin-bottom: 1em;
+  border-radius: 10px 10px 10px 10px;
+  outline: none;
+  font-size: 1rem;
+  background-color: var(--primary-purple);
+  align-items: flex-start;
+}
+.gap{
+  display: flex;
+  align-items: self-start;
+  padding: 10px 20px;
+  border-radius: 20px 20px 20px 20px;
+  border: none;
+  width: 35vw;
+}
+
+.gap-left{
+  margin-left: 2em;
+}
+
+body{
+  background-color: black;
 }

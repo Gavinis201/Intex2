@@ -13,6 +13,17 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Intex2 API", Version = "v1" });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactAppBlah", 
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -24,6 +35,8 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Intex2 API V1");
     });
 }
+
+app.UseCors("AllowReactAppBlah");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
