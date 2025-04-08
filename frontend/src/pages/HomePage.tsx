@@ -1,9 +1,9 @@
+import HomePageComp from '../components/HomePageComp';
+
 function HomePage() {
-    return (
-        <div>
-          <h1>Welcome to the Home Page!</h1>
-        </div>
-      )
-    
+  return (
+    <HomePageComp />
+  );
 }
+
 export default HomePage;
