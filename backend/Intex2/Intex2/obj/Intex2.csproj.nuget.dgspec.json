@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/Intex2.csproj": {}
+    "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj": {}
   },
   "projects": {
-    "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/Intex2.csproj": {
+    "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/Intex2.csproj",
+        "projectUniqueName": "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj",
         "projectName": "Intex2",
-        "projectPath": "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/Intex2.csproj",
-        "packagesPath": "/Users/gavinsmith/.nuget/packages/",
-        "outputPath": "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/obj/",
+        "projectPath": "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj",
+        "packagesPath": "/Users/persianprince/.nuget/packages/",
+        "outputPath": "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/gavinsmith/.nuget/NuGet/NuGet.Config"
+          "/Users/persianprince/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -83,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.406/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.405/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

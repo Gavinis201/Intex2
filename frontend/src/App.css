@@ -4,9 +4,10 @@
 
 #root {
   /* max-width: 1280px; */
-  margin: 0 auto;
-  /* padding: 2rem; */
-  /* text-align: center; */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
   --primary-purple: #6A00FC;
 }
 .logo {
@@ -78,6 +79,193 @@
   margin-left: 2em;
 }
 
-body{
-  background-color: black;
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.backgroundPicHomePage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-image: url('/assets/images/netfilxpic.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.backgroundPicHomePage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.50);
+  z-index: 1;
+}
+
+.homeContent {
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-size: 2rem;
+  padding-top: 5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 5rem;
+}
+
+.homeContent h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.homeContent h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.homeContent h4 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.homeContent button {
+  font-size: 1rem;
+  padding: 0.5rem 1.5rem;
+  background-color: var(--primary-purple);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.homeContent button:hover {
+  background-color: #5500d3;
+  border-color: transparent;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1rem 0;
+}
+
+.main-content {
+  min-height: 100vh;
+  padding-top: 60px; /* Adjust based on your header height */
+  padding-bottom: 60px; /* Adjust based on your footer height */
+}
+
+.login-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem;
+}
+
+.login-form {
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 3rem;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-form h2 {
+  color: white;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #333;
+  color: white;
+  font-size: 1rem;
+}
+
+.form-group input::placeholder {
+  color: #8c8c8c;
+}
+
+.form-group input:focus {
+  outline: none;
+  background-color: #454545;
+}
+
+.login-button {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  background-color: var(--primary-purple);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #5500d3;
+}
+
+.login-footer {
+  margin-top: 1rem;
+  text-align: center;
+  color: #737373;
+}
+
+.login-footer a {
+  color: white;
+  text-decoration: none;
+  margin-left: 0.5rem;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
 }
