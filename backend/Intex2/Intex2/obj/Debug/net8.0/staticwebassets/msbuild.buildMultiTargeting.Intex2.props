@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="../build/Intex2.props" />
+  <Import Project="..\build\Intex2.props" />
 </Project>

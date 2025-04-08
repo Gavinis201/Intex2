@@ -5,7 +5,7 @@ import AdminMoviePage from "./pages/AdminMoviePage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PrivacyPage from "./pages/PrivacyPage";
-import CreateAccountPage from "./components/CreateAccountPage";
+import CreateAccountPage from "./components/CreateAccount";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ContactPage from "./pages/ContactPage";
@@ -18,7 +18,7 @@ const AppLayout = () => {
 
   return (
     <>
-      {!isAuthPage && <Header />}
+      <Header />
       <main className={!isAuthPage ? 'main-content' : ''}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -31,7 +31,7 @@ const AppLayout = () => {
           <Route path="/ProductDetail" element={<AdminMoviePage />} />
         </Routes>
       </main>
-      {!isAuthPage && <Footer />}
+     <Footer />
     </>
   );
 };
