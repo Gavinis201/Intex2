@@ -10,6 +10,7 @@ import "../App.css";
 
 const Footer = () => {
   return (
+    <>
     <footer
       className="bg-black text-white py-4 border-top"
       style={{ marginTop: "auto" }}
@@ -57,6 +58,8 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    
+    </>
   );
 };
 

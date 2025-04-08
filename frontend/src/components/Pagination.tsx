@@ -47,6 +47,8 @@ interface PaginationProps {
     const pageNumbers = generatePageNumbers();
   
     return (
+      <>
+      
       <div className="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
         <div>
           <label className="me-2">Page Size:</label>
@@ -96,6 +98,7 @@ interface PaginationProps {
           </ul>
         </nav>
       </div>
+      </>
     );
   };
   
