@@ -29,3 +29,6 @@ dist-ssr
 **/obj/
 **/bin/
 .vs/
+*.dll
+*.pdb
+*.cache

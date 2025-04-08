@@ -1,6 +1,9 @@
 {
   "version": 2,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Matt
   "dgSpecHash": "KbS9UNMNYn0=",
   "success": true,
   "projectFilePath": "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj",
@@ -58,6 +61,7 @@
     "/Users/persianprince/.nuget/packages/system.text.encodings.web/8.0.0/system.text.encodings.web.8.0.0.nupkg.sha512",
     "/Users/persianprince/.nuget/packages/system.text.json/8.0.0/system.text.json.8.0.0.nupkg.sha512",
     "/Users/persianprince/.nuget/packages/system.threading.channels/6.0.0/system.threading.channels.6.0.0.nupkg.sha512"
+<<<<<<< HEAD
 =======
   "dgSpecHash": "ZFS8zHvjSl0=",
   "success": true,
@@ -117,6 +121,8 @@
     "C:\\Users\\Paolo Turrini\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512",
     "C:\\Users\\Paolo Turrini\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512"
 >>>>>>> 34ea684fadec42c28aef2d5d43c336a1a064c638
+=======
+>>>>>>> Matt
   ],
   "logs": []
 }
