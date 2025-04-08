@@ -85,6 +85,7 @@ body, html {
   height: 100%;
   width: 100%;
   overflow-x: hidden;
+  background-color: black;
 }
 
 header {
@@ -96,16 +97,17 @@ header {
 }
 
 .backgroundPicHomePage {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
+  min-height: 100vh;
   width: 100%;
-  height: 100vh;
   background-image: url('/assets/images/netfilxpic.jpg');
-  background-size: cover;
-  background-position: center;
+  background-size: 120% auto;
+  background-position: top center;
   background-repeat: no-repeat;
   z-index: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
 }
 
 .backgroundPicHomePage::before {
@@ -115,7 +117,7 @@ header {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.50);
+  background-color: rgba(0, 0, 0, 0.15);
   z-index: 1;
 }
 
@@ -124,12 +126,11 @@ header {
   z-index: 2;
   color: white;
   font-size: 2rem;
-  padding-top: 5rem;
+  padding: 2rem 5rem;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-left: 5rem;
 }
 
 .homeContent h1 {
@@ -180,13 +181,13 @@ footer {
   width: 100%;
   z-index: 10;
   background-color: rgba(0, 0, 0, 0.5);
-  padding: 1rem 0;
+  padding: 0.25rem 0;
 }
 
 .main-content {
   min-height: 100vh;
-  padding-top: 60px; /* Adjust based on your header height */
-  padding-bottom: 60px; /* Adjust based on your footer height */
+  padding-top: 60px;
+  padding-bottom: 30px;
 }
 
 .login-container {
@@ -335,4 +336,70 @@ color: var(--primary-purple);
 
 .bg-dark{
   background-color: black;
+}
+
+.trending-section {
+  margin-top: 2rem;
+  padding-bottom: 4rem;
+  width: 100%;
+}
+
+.trending-section h3 {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.movie-thumbnail {
+  width: 200px;
+  transition: transform 0.3s ease;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.rank-number {
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  width: 30px;
+  height: 30px;
+  background-color: var(--primary-purple);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  z-index: 3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.movie-thumbnail:hover {
+  transform: scale(1.05);
+  z-index: 2;
+}
+
+.trending-thumbnail {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.movie-title {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

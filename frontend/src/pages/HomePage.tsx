@@ -1,8 +1,9 @@
-import HomePageComp from '../components/HomePageComp';
+import HomeComp from '../components/HomeComp';
+import '../Matt.css';
 
 function HomePage() {
   return (
-    <HomePageComp />
+    <HomeComp />
   );
 }
 
