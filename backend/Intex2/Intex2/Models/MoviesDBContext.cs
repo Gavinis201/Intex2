@@ -6,23 +6,16 @@ namespace Intex2.Models;
 
 public partial class MoviesDBContext : DbContext
 {
-    public MoviesDBContext()
-    {
-    }
+    public MoviesDBContext() { }
 
     public MoviesDBContext(DbContextOptions<MoviesDBContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
     public virtual DbSet<MoviesRating> MoviesRatings { get; set; }
-
     public virtual DbSet<MoviesTitle> MoviesTitles { get; set; }
-
     public virtual DbSet<MoviesUser> MoviesUsers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlite("Data Source=Movies.sqlite");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,9 +33,8 @@ public partial class MoviesDBContext : DbContext
 
         modelBuilder.Entity<MoviesTitle>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("movies_titles");
+            entity.HasKey(e => e.ShowId);
+            entity.ToTable("movies_titles");
 
             entity.Property(e => e.AnimeSeriesInternationalTvShows).HasColumnName("Anime Series International TV Shows");
             entity.Property(e => e.BritishTvShowsDocuseriesInternationalTvShows).HasColumnName("British TV Shows Docuseries International TV Shows");
