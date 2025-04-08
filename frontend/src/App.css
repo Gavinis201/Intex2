@@ -72,7 +72,7 @@
   padding: 10px 20px;
   border-radius: 20px 20px 20px 20px;
   border: none;
-  width: 35vw;
+  width: 40vw;
 }
 
 .gap-left{
@@ -268,4 +268,71 @@ footer {
 
 .login-footer a:hover {
   text-decoration: underline;
+}
+
+.textpurple{
+color: var(--primary-purple);
+}
+
+
+.background-color {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 5em;
+  align-items: center;
+  background-image: url('../src/assets/netfilxpic.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 80vh;   /* <-- was height: 100vh, use min-height instead */
+  width: 100%;
+  z-index: 1;
+}
+
+
+.background-color::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Adjust darkness */
+  z-index: 0;
+}
+
+/* Ensures your actual content stays above the overlay */
+.background-color h1,
+.background-color h3,
+.background-color p {
+  display: flex;
+  justify-content: flex-start;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.privacy-color {
+  color: white;
+}
+
+.blackOp{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5em;
+  background-color: black;
+  /* height: 50vh; */
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+}
+
+.privacy-start{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bg-dark{
+  background-color: black;
 }

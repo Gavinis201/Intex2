@@ -34,7 +34,7 @@ function Header() {
           </button>
         </div>
       </header>
-      <hr style={{ color: 'white' }} />
+      {/* <hr style={{ color: 'white' }} /> */}
     </>
   );
 }

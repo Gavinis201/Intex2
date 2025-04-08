@@ -1,9 +1,10 @@
-import PrivacyOutline from "../components/PrivacyOutline";
+import ContactOutline from "../components/ContactOutline";
+
 function PrivacyPage() {
     return (
         <> 
         <div className="">
-        <PrivacyOutline />
+        <ContactOutline />
         </div>
         </>
       )
