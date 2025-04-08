@@ -1,6 +1,7 @@
 using Intex2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MoviesDBContext = Intex2.Models.MoviesDBContext;
 
 namespace Intex2.Controllers
 {
