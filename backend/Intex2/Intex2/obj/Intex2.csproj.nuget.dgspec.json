@@ -1,59 +1,25 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Matt
-    "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj": {}
+    "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/Intex2.csproj": {}
   },
   "projects": {
-    "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj": {
+    "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/Intex2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj",
+        "projectUniqueName": "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/Intex2.csproj",
         "projectName": "Intex2",
-        "projectPath": "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/Intex2.csproj",
-        "packagesPath": "/Users/persianprince/.nuget/packages/",
-        "outputPath": "/Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/obj/",
-<<<<<<< HEAD
-=======
-    "C:\\Users\\Paolo Turrini\\source\\repos\\Intex2\\backend\\Intex2\\Intex2\\Intex2.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\Paolo Turrini\\source\\repos\\Intex2\\backend\\Intex2\\Intex2\\Intex2.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\Paolo Turrini\\source\\repos\\Intex2\\backend\\Intex2\\Intex2\\Intex2.csproj",
-        "projectName": "Intex2",
-        "projectPath": "C:\\Users\\Paolo Turrini\\source\\repos\\Intex2\\backend\\Intex2\\Intex2\\Intex2.csproj",
-        "packagesPath": "C:\\Users\\Paolo Turrini\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Paolo Turrini\\source\\repos\\Intex2\\backend\\Intex2\\Intex2\\obj\\",
->>>>>>> 34ea684fadec42c28aef2d5d43c336a1a064c638
-=======
->>>>>>> Matt
+        "projectPath": "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/Intex2.csproj",
+        "packagesPath": "/Users/gavinsmith/.nuget/packages/",
+        "outputPath": "/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-<<<<<<< HEAD
-<<<<<<< HEAD
-          "/Users/persianprince/.nuget/NuGet/NuGet.Config"
-=======
-          "C:\\Users\\Paolo Turrini\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
->>>>>>> 34ea684fadec42c28aef2d5d43c336a1a064c638
-=======
-          "/Users/persianprince/.nuget/NuGet/NuGet.Config"
->>>>>>> Matt
+          "/Users/gavinsmith/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -117,15 +83,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
-<<<<<<< HEAD
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.405/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.407/PortableRuntimeIdentifierGraph.json"
->>>>>>> 34ea684fadec42c28aef2d5d43c336a1a064c638
-=======
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.405/PortableRuntimeIdentifierGraph.json"
->>>>>>> Matt
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.406/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

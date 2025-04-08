@@ -124,22 +124,6 @@ body, html {
   margin-bottom: 2rem;
 }
 
-/* Footer Styles */
-footer {
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 0.25rem 0;
-  margin-top: auto;
-  z-index: 10;
-  position: relative;
-}
-
-/* Main content wrapper */
-.main-content {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
 
 /* Login Page Styles */
 .login-container {

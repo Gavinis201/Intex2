@@ -10,6 +10,7 @@ import fallen from '../assets/images/Top10/Fallen.jpg';
 import daybreak from '../assets/images/Top10/Daybreak.jpg';
 import blackway from '../assets/images/Top10/Blackway.jpg';
 import badBlood from '../assets/images/Top10/Bad Blood.jpg';
+import Footer from './Footer';
 
 const HomeComp = () => {
   const topMovies = [
@@ -26,6 +27,7 @@ const HomeComp = () => {
   ];
 
   return (
+    <>
     <div className="backgroundPicHomePage">
       <div className="homeContent">
         <br /><br />
@@ -51,10 +53,11 @@ const HomeComp = () => {
           ))}
         </div>
       </div>
-      <footer>
-        <p style={{ color: 'white', textAlign: 'center', margin: '0' }}>© 2024 Movie Rating Site. All rights reserved.</p>
-      </footer>
+      
     </div>
+
+    <Footer />
+    </>
   );
 };
 

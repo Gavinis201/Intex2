@@ -100,12 +100,12 @@ header {
 
 .backgroundPicHomePage {
   position: relative;
-  min-height: 100vh;
+  min-height: 150vh;
   width: 100%;
   background-image: url('/assets/images/netfilxpic.jpg');
   background-size: 120% auto;
   background-position: top center;
-  background-repeat: no-repeat;
+  background-repeat: repeat-y;
   z-index: 0;
   display: flex;
   flex-direction: column;
@@ -176,13 +176,7 @@ nav {
   z-index: 3;
 }
 
-footer {
-  position: relative;
-  width: 100%;
-  z-index: 10;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 1rem 0;
-}
+
 
 .main-content {
   min-height: 100vh;
