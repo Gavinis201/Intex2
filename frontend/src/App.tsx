@@ -17,8 +17,9 @@ const AppLayout = () => {
 
   return (
     <>
-      <Header />
+    <div className="d-flex flex-column min-vh-100">
       <main className={!isAuthPage ? 'main-content' : ''}>
+      <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/Login" element={<LoginPage />} />
@@ -27,10 +28,11 @@ const AppLayout = () => {
           <Route path="/Contact" element={<ContactPage />} />
           <Route path="/FAQ" element={<FrequentyAsk />} />
           <Route path="/AdminMovies" element={<AdminMoviePage />} />
-          <Route path="/ProductDetail" element={<AdminMoviePage />} />
+          <Route path="/ProductDetail" />
         </Routes>
-      </main>
      <Footer />
+      </main>
+    </div>
     </>
   );
 };

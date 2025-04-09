@@ -12,10 +12,9 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer
-      className="bg-black text-white py-3 border-top"
-      style={{ marginTop: "auto" }}
-    >
+    <>
+    
+    <footer className="bg-black text-white py-3 border-top">
       <div className="container">
         <div className="row g-2">
           {/* Left - Logo + Icons */}
@@ -79,6 +78,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </>
   );
 };
 

@@ -3,18 +3,9 @@
   --primary-purple: #6A00FC;
 }
 
-/* Reset styles */
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-  background-color: black;
-}
-
 #root {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -41,7 +32,7 @@ body, html {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
 
@@ -50,14 +41,45 @@ body, html {
   z-index: 2;
   color: white;
   font-size: 2rem;
-  padding: 2rem 5rem;
+  padding: 1rem 5rem;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   flex: 1;
 }
+.homeContent h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
 
+.homeContent h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  /* line-height: 1.2; */
+}
+
+.homeContent h4 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.homeContent button {
+  font-size: 1rem;
+  padding: 0.5rem 1.5rem;
+  background-color: var(--primary-purple);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.homeContent button:hover {
+  background-color: #5500d3;
+  border-color: transparent;
+}
 /* Movie Grid Styles */
 .movie-grid {
   display: grid;
@@ -131,6 +153,7 @@ footer {
   padding: 0.25rem 0;
   margin-top: auto;
   z-index: 10;
+  position: relative;
 }
 
 /* Main content wrapper */
