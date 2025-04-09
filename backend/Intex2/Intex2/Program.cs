@@ -68,6 +68,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Content Security Policy: Attack Mitigations
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Content-Security-Policy",
+        "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'");
+    await next();
+});
+
 // Seed roles and admin user
 using (var scope = app.Services.CreateScope())
 {
