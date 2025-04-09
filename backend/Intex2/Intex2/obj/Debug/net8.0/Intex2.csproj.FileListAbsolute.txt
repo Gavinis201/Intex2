@@ -382,6 +382,7 @@ C:/Users/Paolo Turrini/source/repos/Intex2/backend/Intex2/Intex2/obj/Debug/net8.
 C:/Users/Paolo Turrini/source/repos/Intex2/backend/Intex2/Intex2/obj/Debug/net8.0/Intex2.pdb
 C:/Users/Paolo Turrini/source/repos/Intex2/backend/Intex2/Intex2/obj/Debug/net8.0/Intex2.genruntimeconfig.cache
 C:/Users/Paolo Turrini/source/repos/Intex2/backend/Intex2/Intex2/obj/Debug/net8.0/ref/Intex2.dll
+<<<<<<< HEAD
 /Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
 /Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.AspNetCore.Cryptography.Internal.dll
 /Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
@@ -396,3 +397,20 @@ C:/Users/Paolo Turrini/source/repos/Intex2/backend/Intex2/Intex2/obj/Debug/net8.
 /Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /Users/persianprince/Documents/Winter 2025 Semester/INTEX/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
+=======
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/System.Diagnostics.DiagnosticSource.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/System.IO.Pipelines.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/System.Text.Encodings.Web.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/System.Text.Json.dll
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/runtimes/linux-musl-s390x/native/libe_sqlite3.so
+/Users/gavinsmith/Desktop/Intex2/backend/Intex2/Intex2/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
+>>>>>>> ec1d670c786d15f9249b81caecd5f38ea26cb8a8
