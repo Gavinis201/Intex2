@@ -218,3 +218,17 @@ color: var(--primary-purple);
 .bg-dark{
   background-color: black;
 }
+
+.movieSearch{
+width: 18vw;
+background-color: white;
+border-radius: 5px;
+padding: 8px;
+outline: none;
+border: none;
+color: black;
+}
+
+.custom-gap {
+  gap: 1em;
+}

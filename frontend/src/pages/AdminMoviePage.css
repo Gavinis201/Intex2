@@ -114,3 +114,6 @@ color: var(--primary-purple);
 .bg-dark{
   background-color: black;
 }
+.opa{
+  background-color: rgba(0, 0, 0, 0.55); /* semi-transparent black */
+}

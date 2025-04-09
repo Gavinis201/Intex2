@@ -64,7 +64,7 @@ const AdminMoviePage = () => {
   if (error) return <p className="text-danger">Error: {error}</p>;
 
   return (
-    <div className="container my-3">
+    <div className="container my-3 ">
       <h1 className="mb-3 text-white">Admin - Movies</h1>
       <div className="add-container text-white">
         <p>To view all fields, use the Edit button</p>
