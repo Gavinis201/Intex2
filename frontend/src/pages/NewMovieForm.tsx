@@ -49,7 +49,7 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
   return (
     <form onSubmit={handleSubmit} className="mb-4">
       <div className="mb-3">
-        <label className="form-label">Title</label>
+        <label className="form-label text-white">Title</label>
         <input
           name="title"
           className="form-control"
@@ -60,7 +60,7 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Director</label>
+        <label className="form-label text-white">Director</label>
         <input
           name="director"
           className="form-control"
@@ -70,7 +70,7 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Type</label>
+        <label className="form-label text-white">Type</label>
         <input
           name="type"
           className="form-control"
@@ -80,7 +80,7 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Release Year</label>
+        <label className="form-label text-white">Release Year</label>
         <input
           type="number"
           name="releaseYear"
@@ -91,7 +91,7 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Duration</label>
+        <label className="form-label text-white">Duration</label>
         <input
           name="duration"
           className="form-control"
@@ -101,7 +101,7 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Description</label>
+        <label className="form-label text-white">Description</label>
         <textarea
           name="description"
           className="form-control"

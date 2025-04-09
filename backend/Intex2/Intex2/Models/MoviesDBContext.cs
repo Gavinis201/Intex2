@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Intex2.Models;
 
-public partial class MoviesDBContext : DbContext
+public partial class MoviesDBContext : IdentityDbContext<ApplicationUser>
 {
     public MoviesDBContext() { }
 
@@ -16,10 +18,31 @@ public partial class MoviesDBContext : DbContext
     public virtual DbSet<MoviesUser> MoviesUsers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite("Data Source=Movies.sqlite");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlite("Data Source=Movies.sqlite");
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
+        // Configure identity tables
+        modelBuilder.Entity<ApplicationUser>(entity =>
+        {
+            entity.HasOne(e => e.MoviesUser)
+                .WithOne()
+                .HasForeignKey<ApplicationUser>(e => e.MoviesUserId);
+        });
+
+        // Configure password requirements
+        modelBuilder.Entity<IdentityRole>().HasData(
+            new IdentityRole { Id = "1", Name = "Administrator", NormalizedName = "ADMINISTRATOR" },
+            new IdentityRole { Id = "2", Name = "User", NormalizedName = "USER" }
+        );
+        
         modelBuilder.Entity<MoviesRating>(entity =>
         {
             entity
@@ -72,9 +95,9 @@ public partial class MoviesDBContext : DbContext
         modelBuilder.Entity<MoviesUser>(entity =>
         {
             entity
-                .HasNoKey()
                 .ToTable("movies_users");
-
+                
+            entity.HasKey(e => e.UserId);
             entity.Property(e => e.Age).HasColumnName("age");
             entity.Property(e => e.AmazonPrime).HasColumnName("Amazon Prime");
             entity.Property(e => e.AppleTv).HasColumnName("Apple TV+");

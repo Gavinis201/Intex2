@@ -1,14 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 
-
-
 #root {
-  /* max-width: 1280px; */
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100vh;
-  --primary-purple: #6A00FC;
+  --primary-purple: rgb(138, 43, 226);
+}
+body{
+  height: auto;
 }
 .logo {
   height: 6em;
@@ -24,20 +20,7 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
 
 .card {
   padding: 2em;
@@ -66,127 +49,15 @@
   background-color: var(--primary-purple);
   align-items: flex-start;
 }
-.gap{
-  display: flex;
-  align-items: self-start;
-  padding: 10px 20px;
-  border-radius: 20px 20px 20px 20px;
-  border: none;
-  width: 40vw;
-}
+
 
 .gap-left{
   margin-left: 2em;
 }
 
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-}
-
-.backgroundPicHomePage {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-image: url('/assets/images/netfilxpic.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.backgroundPicHomePage::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.50);
-  z-index: 1;
-}
-
-.homeContent {
-  position: relative;
-  z-index: 2;
-  color: white;
-  font-size: 2rem;
-  padding-top: 5rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 5rem;
-}
-
-.homeContent h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-}
-
-.homeContent h2 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-}
-
-.homeContent h4 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.homeContent button {
-  font-size: 1rem;
-  padding: 0.5rem 1.5rem;
-  background-color: var(--primary-purple);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.homeContent button:hover {
-  background-color: #5500d3;
-  border-color: transparent;
-}
-
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 3;
-}
-
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 1rem 0;
-}
 
 .main-content {
   min-height: 100vh;
-  padding-top: 60px; /* Adjust based on your header height */
-  padding-bottom: 60px; /* Adjust based on your footer height */
 }
 
 .login-container {
@@ -277,26 +148,27 @@ color: var(--primary-purple);
 
 .background-color {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 5em;
-  align-items: center;
-  background-image: url('../src/assets/netfilxpic.jpg');
+  min-height: 100vh;
+  width: 100%;
+  background-image: url('/assets/images/netfilxpic.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 80vh;   /* <-- was height: 100vh, use min-height instead */
-  width: 100%;
-  z-index: 1;
+  background-attachment: fixed;
+  padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
-
 
 .background-color::before {
   content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* Adjust darkness */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
   z-index: 0;
 }
 
@@ -315,22 +187,32 @@ color: var(--primary-purple);
   color: white;
 }
 
-.blackOp{
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 5em;
-  background-color: black;
-  /* height: 50vh; */
-  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+.blackOp {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: white;
+  flex: 1;
+  width: 100%;
 }
 
-.privacy-start{
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  gap: 10px;
+.privacy-start {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.privacy-start h3 {
+  color: var(--primary-purple);
+  margin-bottom: 1rem;
+}
+
+.privacy-start p {
+  line-height: 1.6;
+  margin-bottom: 0;
 }
 
 .bg-dark{
