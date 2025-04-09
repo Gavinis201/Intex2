@@ -20,8 +20,8 @@ const LoginComp = () => {
       console.log('Login response:', response);
       
       if (response.success) {
-        // Redirect to movie page
-        navigate('/moviepage');
+        // Redirect to home page
+        navigate('/');
       } else {
         setError(response.message || 'Login failed');
       }
