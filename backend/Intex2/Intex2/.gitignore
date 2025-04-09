@@ -1,10 +1,15 @@
 # Build folders
 bin/
 obj/
+<<<<<<< HEAD
+=======
+
+>>>>>>> 16e62bdfb99ea71580cf0e7b8718b0cacf36a7a4
 # macOS system files
 .DS_Store
 .AppleDouble
 .LSOverride
+<<<<<<< HEAD
 # Thumbnails
 ._*
 # Spotlight
@@ -21,24 +26,69 @@ Thumbs.db
 # Visual Studio for Mac
 .vs/
 *.userprefs
+=======
+
+# Thumbnails
+._*
+
+# Spotlight
+.Spotlight-V100
+
+# Trash
+.Trashes
+
+# Icon file
+Icon?
+
+# macOS indexing files
+ehthumbs.db
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Visual Studio for Mac
+.vs/
+*.userprefs
+
+>>>>>>> 16e62bdfb99ea71580cf0e7b8718b0cacf36a7a4
 # Rider + ReSharper
 .idea/
 *.DotSettings.user
 _ReSharper*/
 *.sln.iml
+<<<<<<< HEAD
+=======
+
+>>>>>>> 16e62bdfb99ea71580cf0e7b8718b0cacf36a7a4
 # User-specific files
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
+<<<<<<< HEAD
 # Logs
 *.log
 *.tlog
+=======
+
+# Logs
+*.log
+*.tlog
+
+>>>>>>> 16e62bdfb99ea71580cf0e7b8718b0cacf36a7a4
 # Compiled binaries and debug symbols
 *.dll
 *.exe
 *.pdb
 *.cache
+<<<<<<< HEAD
 # NuGet
 *.nupkg
 packages/
+=======
+
+# NuGet
+*.nupkg
+packages/
+>>>>>>> 16e62bdfb99ea71580cf0e7b8718b0cacf36a7a4
