@@ -1,15 +1,15 @@
 import '../Matt.css';
 import { Link } from 'react-router-dom';
-import backStreetGirls from '../assets/images/Back Street Girls GOKUDOLS.jpg'
-import legallyBlonde from '../assets/images/Legally Blonde.jpg';
-import inconceivable from '../assets/images/Inconceivable.jpg';
-import heNeverDied from '../assets/images/He Never Died.jpg';
-import ghostRider from '../assets/images/Ghost Rider.jpg';
-import frenchToast from '../assets/images/French Toast.jpg';
-import fallen from '../assets/images/Fallen.jpg';
-import daybreak from '../assets/images/Daybreak.jpg';
-import blackway from '../assets/images/Blackway.jpg';
-import badBlood from '../assets/images/Bad Blood.jpg';
+import backStreetGirls from '../assets/images/Top10/Back Street Girls GOKUDOLS.jpg'
+import legallyBlonde from '../assets/images/Top10/Legally Blonde.jpg';
+import inconceivable from '../assets/images/Top10/Inconceivable.jpg';
+import heNeverDied from '../assets/images/Top10/He Never Died.jpg';
+import ghostRider from '../assets/images/Top10/Ghost Rider.jpg';
+import frenchToast from '../assets/images/Top10/French Toast.jpg';
+import fallen from '../assets/images/Top10/Fallen.jpg';
+import daybreak from '../assets/images/Top10/Daybreak.jpg';
+import blackway from '../assets/images/Top10/Blackway.jpg';
+import badBlood from '../assets/images/Top10/Bad Blood.jpg';
 
 const HomeComp = () => {
   const topMovies = [

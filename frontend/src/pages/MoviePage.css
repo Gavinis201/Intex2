@@ -1,0 +1,50 @@
+.interstelllar{
+    width: 100vw;
+    height: 70vh;
+    object-fit: cover;
+    object-position: 50% 20%;
+    display: block;
+}
+.button-row {
+    position: absolute;
+    top: 67%; /* adjust this to move it up/down */
+    left: 57%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .play-button{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    /* letter-spacing: 1px; */
+   font-size: 1.5em;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.991);
+    color: black;
+    padding: 10px 40px 10px 40px;
+    border-color: none;
+}
+
+.info-button{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    /* letter-spacing: 1px; */
+    font-size: 1.5em;
+    border-radius: 5px;
+    padding: 10px 30px 10px 30px;
+    /* background-color: rgba(0, 0, 0, 0.7);  */
+    background-color: rgba(242, 241, 241, 0.636);
+    color: black;
+    border-color: none;
+  }
+  
+  .play-button:hover{
+    background-color: rgba(255, 255, 255, 0.751);
+    border-color: none !important;
+  }
+ .info-button:hover{
+    background-color: rgba(255, 255, 255, 0.401);
+    border-color: none !important;
+ }
+ button:hover{
+    border-color: none !important;
+ }

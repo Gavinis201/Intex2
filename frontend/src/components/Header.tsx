@@ -25,7 +25,7 @@ function Header() {
   return (
     <>
       <header 
-        className="d-flex justify-content-between align-items-center px-4 py-4 bg-black border-bottom border-white"
+        className="d-flex justify-content-between align-items-center px-4 py-3 bg-black border-bottom border-white"
         style={{
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           position: 'sticky',
