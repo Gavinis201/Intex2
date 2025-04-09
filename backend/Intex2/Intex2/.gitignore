@@ -1,0 +1,44 @@
+# Build folders
+bin/
+obj/
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+# Thumbnails
+._*
+# Spotlight
+.Spotlight-V100
+# Trash
+.Trashes
+# Icon file
+Icon?
+# macOS indexing files
+ehthumbs.db
+Thumbs.db
+# VS Code
+.vscode/
+# Visual Studio for Mac
+.vs/
+*.userprefs
+# Rider + ReSharper
+.idea/
+*.DotSettings.user
+_ReSharper*/
+*.sln.iml
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+# Logs
+*.log
+*.tlog
+# Compiled binaries and debug symbols
+*.dll
+*.exe
+*.pdb
+*.cache
+# NuGet
+*.nupkg
+packages/
