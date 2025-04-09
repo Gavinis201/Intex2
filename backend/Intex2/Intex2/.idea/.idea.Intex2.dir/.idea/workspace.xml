@@ -8,6 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46606af-3771-49d5-90a4-efc99bf76e7f" name="Changes" comment="">
+<<<<<<< HEAD
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Intex2.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Intex2.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/MoviesTitleController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/MoviesTitleController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Movies.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/Movies.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.pdb" afterDir="false" />
+>>>>>>> aa51df328522e010ff7a7a6a35481637557abfbc
       <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfoInputs.cache" afterDir="false" />
     </list>
@@ -86,7 +94,7 @@
       <workItem from="1744149812972" duration="2368000" />
       <workItem from="1744154858676" duration="1411000" />
       <workItem from="1744156685267" duration="3601000" />
-      <workItem from="1744165263196" duration="4428000" />
+      <workItem from="1744165263196" duration="9182000" />
     </task>
     <servers />
   </component>
