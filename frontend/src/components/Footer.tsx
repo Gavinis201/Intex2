@@ -13,12 +13,11 @@ const Footer = () => {
   
   return (
     <>
-    
     <footer className="bg-black text-white py-3 border-top">
       <div className="container">
-        <div className="row g-2">
+        <div className="row g-4">
           {/* Left - Logo + Icons */}
-          <div className="col-md-4">
+          <div className="col-md-3">
             <div className="d-flex flex-column align-items-start gap-2">
               <h3 className="textpurple mb-0">CN</h3>
               <p className="text-light small mb-2">Connecting ideas, inspiring innovation.</p>
@@ -39,8 +38,8 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Middle - Quick Links */}
-          <div className="col-md-4">
+          {/* Quick Links - Spread across */}
+          <div className="col-md-3">
             <h6 className="fw-bold mb-2">Quick Links</h6>
             <ul className="list-unstyled small mb-0">
               <li>
@@ -48,26 +47,28 @@ const Footer = () => {
                   FAQ
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          <div className="col-md-3">
+            <h6 className="fw-bold mb-2">Legal</h6>
+            <ul className="list-unstyled small mb-0">
               <li>
                 <Link to="/Privacy" className="text-white text-decoration-none hover-purple">
                   Privacy Policy
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          <div className="col-md-3">
+            <h6 className="fw-bold mb-2">Support</h6>
+            <ul className="list-unstyled small mb-0">
               <li>
                 <Link to="/Contact" className="text-white text-decoration-none hover-purple">
                   Contact Us
                 </Link>
               </li>
-            </ul>
-          </div>
-
-          {/* Right - Contact Info */}
-          <div className="col-md-4">
-            <h6 className="fw-bold mb-2">Contact Us</h6>
-            <ul className="list-unstyled small mb-0">
-              <li>Email: contact@cn.com</li>
-              <li>Phone: (555) 123-4567</li>
-              <li>Address: 123 Innovation Street</li>
             </ul>
           </div>
         </div>

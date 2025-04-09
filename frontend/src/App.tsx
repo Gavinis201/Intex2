@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import ContactPage from "./pages/ContactPage";
 import FrequentyAsk from "./components/FrequentlyAsk";
 import MoviePage from "./pages/MoviePage";
+import ThankYouPage from "./components/ThankYouPage";
 
 // Component to handle layout based on route
 const AppLayout = () => {
@@ -30,6 +31,7 @@ const AppLayout = () => {
           <Route path="/Contact" element={<ContactPage />} />
           <Route path="/FAQ" element={<FrequentyAsk />} />
           <Route path="/AdminMovies" element={<AdminMoviePage />} />
+          <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/ProductDetail" />
         </Routes>
      <Footer />

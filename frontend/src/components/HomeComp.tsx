@@ -52,9 +52,6 @@ const HomeComp = () => {
           ))}
         </div>
       </div>
-      <footer>
-        <p style={{ color: 'white', textAlign: 'center', margin: '0' }}>© 2024 Movie Rating Site. All rights reserved.</p>
-      </footer>
     </div>
 
     </>
