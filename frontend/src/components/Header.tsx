@@ -1,8 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
+import { isAuthenticated, getCurrentUser, logout } from '../services/authService';
 
 function Header() {
+  const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+
+  useEffect(() => {
+    // Check authentication status
+    setAuthenticated(isAuthenticated());
+    setUserEmail(getCurrentUser() || '');
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setAuthenticated(false);
+    setUserEmail('');
+    navigate('/login');
+  };
+
   return (
     <>
       <header 
@@ -31,22 +50,69 @@ function Header() {
           </h1>
         </Link>
 
-        {/* Avatar + Sign out */}
+        {/* Auth buttons */}
         <div className="d-flex align-items-center gap-3">
-          <button
-            className="btn btn-primary btn-md"
-            style={{
-              backgroundColor: '#8A2BE2',
-              border: 'none',
-              fontFamily: 'Montserrat, sans-serif',
-              transition: 'all 0.2s ease',
-              padding: '0.5rem 1.25rem',
-            }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#9D3BE3'}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A2BE2'}
-          >
-            Sign out
-          </button>
+          {authenticated ? (
+            <>
+              <span className="text-light me-2">{userEmail}</span>
+              <button
+                className="btn btn-primary btn-md"
+                style={{
+                  backgroundColor: '#8A2BE2',
+                  border: 'none',
+                  fontFamily: 'Montserrat, sans-serif',
+                  transition: 'all 0.2s ease',
+                  padding: '0.5rem 1.25rem',
+                }}
+                onClick={handleLogout}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#9D3BE3'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A2BE2'}
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">
+                <button
+                  className="btn btn-primary btn-md"
+                  style={{
+                    backgroundColor: '#8A2BE2',
+                    border: 'none',
+                    fontFamily: 'Montserrat, sans-serif',
+                    transition: 'all 0.2s ease',
+                    padding: '0.5rem 1.25rem',
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#9D3BE3'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A2BE2'}
+                >
+                  Sign in
+                </button>
+              </Link>
+              <Link to="/createaccount">
+                <button
+                  className="btn btn-outline-primary btn-md"
+                  style={{
+                    borderColor: '#8A2BE2',
+                    color: '#8A2BE2',
+                    fontFamily: 'Montserrat, sans-serif',
+                    transition: 'all 0.2s ease',
+                    padding: '0.5rem 1.25rem',
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = '#8A2BE2';
+                    e.currentTarget.style.color = 'white';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#8A2BE2';
+                  }}
+                >
+                  Register
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       </header>
       {/* <hr style={{ color: 'white' }} /> */}

@@ -1,5 +1,6 @@
 import CreateAccount from "../components/CreateAccount";
-function PrivacyPage() {
+
+function CreateAccountPage() {
     return (
         <> 
         <div className="">
@@ -9,4 +10,4 @@ function PrivacyPage() {
       )
     
 }
-export default PrivacyPage;
+export default CreateAccountPage;
