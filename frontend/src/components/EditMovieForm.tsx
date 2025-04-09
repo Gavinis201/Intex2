@@ -22,6 +22,10 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Add confirmation dialog
+    const confirmUpdate = window.confirm("Are you sure you want to save changes to this movie?");
+    if (!confirmUpdate) return;
   
     const fullPayload = {
       ...formData,

@@ -27,6 +27,10 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Add confirmation dialog
+    const confirmAdd = window.confirm("Are you sure you want to add this movie?");
+    if (!confirmAdd) return;
+
     try {
       const response = await fetch("https://localhost:5000/MoviesTitle/AddMovie", {
         method: "POST",

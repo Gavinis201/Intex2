@@ -19,7 +19,7 @@ export const fetchMovies = async (
       .join('&');
 
     const response = await fetch(
-      `${API_URL}/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}${
+      `${API_URL}/MoviesTitle/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}${
         selectedCategories.length > 0 ? `&${categoryParams}` : ''
       }`
     );
@@ -38,7 +38,7 @@ export const fetchMovies = async (
 // Add a new movie
 export const addMovie = async (newMovie: MoviesTitle): Promise<MoviesTitle> => {
   try {
-    const response = await fetch(`${API_URL}/AddMovie`, {
+    const response = await fetch(`${API_URL}/MoviesTitle/AddMovie`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const updateMovie = async (
   updatedMovie: MoviesTitle
 ): Promise<MoviesTitle> => {
   try {
-    const response = await fetch(`${API_URL}/UpdateMovie/${movieId}`, {
+    const response = await fetch(`${API_URL}/MoviesTitle/UpdateMovie/${movieId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +75,9 @@ export const updateMovie = async (
       throw new Error('Failed to update movie');
     }
 
-    return await response.json();
+    // NoContent response (204) will not have a body to parse
+    // Return the updatedMovie object that was sent
+    return response.status === 204 ? updatedMovie : await response.json();
   } catch (error) {
     console.error('Error updating movie:', error);
     throw error;
@@ -85,7 +87,7 @@ export const updateMovie = async (
 // Delete a movie by ID
 export const deleteMovie = async (movieId: string): Promise<void> => {
   try {
-    const response = await fetch(`${API_URL}/DeleteMovie/${movieId}`, {
+    const response = await fetch(`${API_URL}/MoviesTitle/DeleteMovie/${movieId}`, {
       method: 'DELETE',
     });
 

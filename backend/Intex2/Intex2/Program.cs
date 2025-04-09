@@ -103,4 +103,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+// Use port 5000
+app.Urls.Clear();
+app.Urls.Add("https://localhost:5000");
+
 app.Run();
