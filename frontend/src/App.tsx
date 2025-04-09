@@ -10,7 +10,11 @@ import Footer from "./components/Footer";
 import ContactPage from "./pages/ContactPage";
 import FrequentyAsk from "./components/FrequentlyAsk";
 import MoviePage from "./pages/MoviePage";
+<<<<<<< HEAD
 import CookieConsent from "./components/CookieConsent";
+=======
+import ThankYouPage from "./components/ThankYouPage";
+>>>>>>> dccfc8bc6070ee2c1d743e04b155cbb2b15b3765
 
 // Component to handle layout based on route
 const AppLayout = () => {
@@ -31,6 +35,7 @@ const AppLayout = () => {
           <Route path="/Contact" element={<ContactPage />} />
           <Route path="/FAQ" element={<FrequentyAsk />} />
           <Route path="/AdminMovies" element={<AdminMoviePage />} />
+          <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/ProductDetail" />
         </Routes>
      <Footer />
