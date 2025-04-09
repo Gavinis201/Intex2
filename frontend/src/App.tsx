@@ -1,11 +1,10 @@
-
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import AdminMoviePage from "./pages/AdminMoviePage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PrivacyPage from "./pages/PrivacyPage";
-import CreateAccountPage from "./components/CreateAccountPage";
+import CreateAccountPage from "./pages/CreateAccountPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ContactPage from "./pages/ContactPage";
@@ -18,8 +17,9 @@ const AppLayout = () => {
 
   return (
     <>
-      {!isAuthPage && <Header />}
+    <div className="d-flex flex-column min-vh-100">
       <main className={!isAuthPage ? 'main-content' : ''}>
+      <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/Login" element={<LoginPage />} />
@@ -28,10 +28,11 @@ const AppLayout = () => {
           <Route path="/Contact" element={<ContactPage />} />
           <Route path="/FAQ" element={<FrequentyAsk />} />
           <Route path="/AdminMovies" element={<AdminMoviePage />} />
-          <Route path="/ProductDetail" element={<AdminMoviePage />} />
+          <Route path="/ProductDetail" />
         </Routes>
+     <Footer />
       </main>
-      {!isAuthPage && <Footer />}
+    </div>
     </>
   );
 };

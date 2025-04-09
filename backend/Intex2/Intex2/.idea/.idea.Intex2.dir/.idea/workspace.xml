@@ -8,18 +8,68 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46606af-3771-49d5-90a4-efc99bf76e7f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Intex2.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Intex2.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/MoviesTitleController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/MoviesTitleController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intex2.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Intex2.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MoviesDBContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/MoviesDBContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MoviesUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/MoviesUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.Data.Sqlite.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.Data.Sqlite.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Sqlite.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Sqlite.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.Extensions.DependencyModel.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Microsoft.Extensions.DependencyModel.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.batteries_v2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.batteries_v2.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.core.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.provider.e_sqlite3.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.provider.e_sqlite3.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-arm/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-arm/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-arm64/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-arm64/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-armel/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-armel/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-mips64/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-mips64/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-musl-arm/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-musl-arm64/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-musl-x64/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-ppc64le/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-ppc64le/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-s390x/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-s390x/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-x64/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-x64/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-x86/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-x86/native/libe_sqlite3.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/maccatalyst-x64/native/libe_sqlite3.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/maccatalyst-x64/native/libe_sqlite3.dylib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/osx-arm64/native/libe_sqlite3.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/osx-arm64/native/libe_sqlite3.dylib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/osx-x64/native/libe_sqlite3.dylib" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/osx-x64/native/libe_sqlite3.dylib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-arm/native/e_sqlite3.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-arm/native/e_sqlite3.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-arm64/native/e_sqlite3.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-arm64/native/e_sqlite3.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-x64/native/e_sqlite3.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-x64/native/e_sqlite3.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-x86/native/e_sqlite3.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-x86/native/e_sqlite3.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.assets.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/ref/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/ref/Intex2.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/refint/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/refint/Intex2.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Intex2.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Intex2.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Intex2.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Intex2.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/Matt.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/src/Matt.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/components/CreateAccount.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/src/components/CreateAccount.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/components/HomeComp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/src/components/HomeComp.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +104,7 @@
     &quot;.NET Launch Settings Profile.Intex2: default.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Matt&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -89,6 +139,9 @@
       <option name="presentableId" value="Default" />
       <updated>1744127980046</updated>
       <workItem from="1744127981182" duration="604000" />
+      <workItem from="1744128625032" duration="3897000" />
+      <workItem from="1744149812972" duration="2368000" />
+      <workItem from="1744154858676" duration="1411000" />
     </task>
     <servers />
   </component>

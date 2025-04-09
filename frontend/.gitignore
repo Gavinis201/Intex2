@@ -23,9 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
-# .gitignore
-**/bin/
-**/obj/
-*.cache
+bin/
+obj/
 *.dll
 *.pdb
+*.cache
+*.json
+*.sqlite
+>>>>>>> Matt

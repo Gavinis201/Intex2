@@ -1,10 +1,10 @@
-import LoginForm from '../components/LoginForm';
-import '../App.css';
+import LoginComp from '../components/LoginComp';
+import '../Matt.css';
 
 function LoginPage() {
   return (
     <div className="backgroundPicHomePage">
-      <LoginForm />
+      <LoginComp />
     </div>
   );
 }

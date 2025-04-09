@@ -1,6 +1,7 @@
 using Intex2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Intex2.Controllers
 {
@@ -15,22 +16,30 @@ namespace Intex2.Controllers
             _context = context;
         }
 
-        // GET: /MoviesTitle/AllMovies?pageSize=10&pageNum=1&genres=action&genres=drama
+        // GET: /MoviesTitle/AllMovies?pageSize=10&pageNum=1&genres=action&search=batman
         [HttpGet("AllMovies")]
         public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetAllMovies([FromQuery] int pageSize = 10, [FromQuery] int pageNum = 1, [FromQuery] List<string> genres = null)
         {
             var query = _context.MoviesTitles.AsQueryable();
 
+            // Filter by genre if provided
             if (genres != null && genres.Any())
             {
                 foreach (var genre in genres)
                 {
-                    query = query.Where(m =>
-                        EF.Property<int?>(m, genre) == 1);
+                    query = query.Where(m => EF.Property<int?>(m, genre) == 1);
                 }
             }
 
+            // Filter by search term if provided
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var loweredSearch = search.ToLower();
+                query = query.Where(m => m.Title.ToLower().Contains(loweredSearch));
+            }
+
             var total = await query.CountAsync();
+
             var movies = await query
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
@@ -43,8 +52,10 @@ namespace Intex2.Controllers
             });
         }
 
+
         // GET: /MoviesTitle/{id}
         [HttpGet("{id}")]
+        [AllowAnonymous] // Allow unauthenticated access to view movie details
         public async Task<ActionResult<MoviesTitle>> GetMoviesTitle(string id)
         {
             var movie = await _context.MoviesTitles.FindAsync(id);
@@ -59,6 +70,7 @@ namespace Intex2.Controllers
 
         // POST: /MoviesTitle/AddMovie
         [HttpPost("AddMovie")]
+        [Authorize] // Require authentication for adding movies
         public async Task<ActionResult<MoviesTitle>> AddMovie(MoviesTitle movie)
         {
             _context.MoviesTitles.Add(movie);
@@ -69,6 +81,7 @@ namespace Intex2.Controllers
 
         // PUT: /MoviesTitle/UpdateMovie/{id}
         [HttpPut("UpdateMovie/{id}")]
+        [Authorize] // Require authentication for updating movies
         public async Task<IActionResult> UpdateMovie(string id, MoviesTitle updatedMovie)
         {
             if (id != updatedMovie.ShowId)
@@ -97,6 +110,7 @@ namespace Intex2.Controllers
 
         // DELETE: /MoviesTitle/DeleteMovie/{id}
         [HttpDelete("DeleteMovie/{id}")]
+        [Authorize] // Require authentication for deleting movies
         public async Task<IActionResult> DeleteMovie(string id)
         {
             var movie = await _context.MoviesTitles.FindAsync(id);
