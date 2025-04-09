@@ -16,22 +16,34 @@ namespace Intex2.Controllers
             _context = context;
         }
 
-        // GET: /MoviesTitle/AllMovies?pageSize=10&pageNum=1&genres=action&genres=drama
+        // GET: /MoviesTitle/AllMovies?pageSize=10&pageNum=1&genres=action&search=batman
         [HttpGet("AllMovies")]
-        public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetAllMovies([FromQuery] int pageSize = 10, [FromQuery] int pageNum = 1, [FromQuery] List<string> genres = null)
+        public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetAllMovies(
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageNum = 1,
+            [FromQuery] List<string> genres = null,
+            [FromQuery] string search = "")
         {
             var query = _context.MoviesTitles.AsQueryable();
 
+            // Filter by genre if provided
             if (genres != null && genres.Any())
             {
                 foreach (var genre in genres)
                 {
-                    query = query.Where(m =>
-                        EF.Property<int?>(m, genre) == 1);
+                    query = query.Where(m => EF.Property<int?>(m, genre) == 1);
                 }
             }
 
+            // Filter by search term if provided
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var loweredSearch = search.ToLower();
+                query = query.Where(m => m.Title.ToLower().Contains(loweredSearch));
+            }
+
             var total = await query.CountAsync();
+
             var movies = await query
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
@@ -43,6 +55,7 @@ namespace Intex2.Controllers
                 totalNumMovies = total
             });
         }
+
 
         // GET: /MoviesTitle/{id}
         [HttpGet("{id}")]
