@@ -1,6 +1,6 @@
 import '../Matt.css';
 import { Link } from 'react-router-dom';
-import backStreetGirls from '../assets/images/Top10/Back Street Girls GOKUDOLS.jpg';
+import backStreetGirls from '../assets/images/Top10/Back Street Girls GOKUDOLS.jpg'
 import legallyBlonde from '../assets/images/Top10/Legally Blonde.jpg';
 import inconceivable from '../assets/images/Top10/Inconceivable.jpg';
 import heNeverDied from '../assets/images/Top10/He Never Died.jpg';
@@ -10,7 +10,6 @@ import fallen from '../assets/images/Top10/Fallen.jpg';
 import daybreak from '../assets/images/Top10/Daybreak.jpg';
 import blackway from '../assets/images/Top10/Blackway.jpg';
 import badBlood from '../assets/images/Top10/Bad Blood.jpg';
-import Footer from './Footer';
 
 const HomeComp = () => {
   const topMovies = [
