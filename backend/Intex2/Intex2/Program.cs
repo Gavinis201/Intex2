@@ -68,6 +68,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Seed roles and admin user
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await Intex2.Data.IdentitySeeder.SeedRolesAndAdmin(services);
+}
+
 // Initialize the database
 app.InitializeDatabase();
 

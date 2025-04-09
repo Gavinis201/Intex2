@@ -8,13 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c46606af-3771-49d5-90a4-efc99bf76e7f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Data/IdentitySeeder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Intex2.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Intex2.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/MoviesTitleController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/MoviesTitleController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Intex2.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Intex2.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/MoviesDBContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/MoviesDBContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/MoviesUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/MoviesUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Movies.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/Movies.sqlite" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.deps.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/Intex2.pdb" afterDir="false" />
@@ -27,7 +26,6 @@
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.batteries_v2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.batteries_v2.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.core.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.provider.e_sqlite3.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/SQLitePCLRaw.provider.e_sqlite3.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-arm/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-arm/native/libe_sqlite3.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-arm64/native/libe_sqlite3.so" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/linux-arm64/native/libe_sqlite3.so" afterDir="false" />
@@ -50,26 +48,16 @@
       <change beforePath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-x86/native/e_sqlite3.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net8.0/runtimes/win-x86/native/e_sqlite3.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/Intex2.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/ref/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/ref/Intex2.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net8.0/refint/Intex2.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net8.0/refint/Intex2.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Intex2.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Intex2.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../frontend/src/Matt.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/src/Matt.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../frontend/src/components/CreateAccount.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/src/components/CreateAccount.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../frontend/src/components/HomeComp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../frontend/src/components/HomeComp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/Back Street Girls GOKUDOLS.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/Bad Blood.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/Blackway.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/Daybreak.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/Fallen.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/French Toast.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/Ghost Rider.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/He Never Died.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/Inconceivable.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../frontend/src/assets/images/Legally Blonde.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +79,9 @@
     &quot;accountId&quot;: &quot;808683f2-b953-46be-a994-f17b2b6c8a0b&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -142,6 +133,8 @@
       <workItem from="1744128625032" duration="3897000" />
       <workItem from="1744149812972" duration="2368000" />
       <workItem from="1744154858676" duration="1411000" />
+      <workItem from="1744156685267" duration="3601000" />
+      <workItem from="1744165263196" duration="2241000" />
     </task>
     <servers />
   </component>
