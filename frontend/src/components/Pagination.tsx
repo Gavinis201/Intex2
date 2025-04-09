@@ -51,7 +51,7 @@ interface PaginationProps {
       
       <div className="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
         <div>
-          <label className="me-2">Page Size:</label>
+          <label className="me-2 text-white">Page Size:</label>
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}

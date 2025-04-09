@@ -1,6 +1,6 @@
 import '../Matt.css';
 import { Link } from 'react-router-dom';
-import backStreetGirls from '../assets/images/Top10/Back Street Girls GOKUDOLS.jpg';
+import backStreetGirls from '../assets/images/Top10/Back Street Girls GOKUDOLS.jpg'
 import legallyBlonde from '../assets/images/Top10/Legally Blonde.jpg';
 import inconceivable from '../assets/images/Top10/Inconceivable.jpg';
 import heNeverDied from '../assets/images/Top10/He Never Died.jpg';
@@ -26,11 +26,12 @@ const HomeComp = () => {
   ];
 
   return (
+    <>
     <div className="backgroundPicHomePage">
       <div className="homeContent">
         <br /><br />
         <h1>Thousands of movies,<br />Best Ratings, and more</h1>
-        <h4>Ready to start? Click here</h4>
+        <h4>Ready to start?</h4>
         <Link to="/CreateAccount">
           <button className="create-account-btn">Create an Account</button>
         </Link>
@@ -55,6 +56,8 @@ const HomeComp = () => {
         <p style={{ color: 'white', textAlign: 'center', margin: '0' }}>© 2024 Movie Rating Site. All rights reserved.</p>
       </footer>
     </div>
+
+    </>
   );
 };
 

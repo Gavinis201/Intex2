@@ -13,9 +13,6 @@ dist-ssr
 *.local
 
 # Editor directories and files
-**/.vs/
-*.vsidx
-
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -26,9 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
-**/obj/
-**/bin/
-.vs/
+bin/
+obj/
 *.dll
 *.pdb
 *.cache
+*.json
+*.sqlite

@@ -90,4 +90,6 @@ public class MoviesTitle
     public int? TalkShowsTvComedies { get; set; }
 
     public int? Thrillers { get; set; }
+    
+    
 }
