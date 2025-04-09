@@ -16,9 +16,13 @@ namespace Intex2.Controllers
             _context = context;
         }
 
-        // GET: /MoviesTitle/AllMovies?pageSize=10&pageNum=1&genres=action&search=batman
         [HttpGet("AllMovies")]
-        public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetAllMovies([FromQuery] int pageSize = 10, [FromQuery] int pageNum = 1, [FromQuery] List<string> genres = null)
+        public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetAllMovies(
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageNum = 1,
+            [FromQuery] List<string> genres = null,
+            [FromQuery] string search = null
+        )
         {
             var query = _context.MoviesTitles.AsQueryable();
 
