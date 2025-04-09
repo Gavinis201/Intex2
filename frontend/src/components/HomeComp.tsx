@@ -31,13 +31,13 @@ const HomeComp = () => {
       <div className="homeContent">
         <br /><br />
         <h1>Thousands of movies,<br />Best Ratings, and more</h1>
-        <h4>Ready to start?</h4>
+        <h4>Ready to start? Click here</h4>
         <Link to="/CreateAccount">
           <button className="create-account-btn">Create an Account</button>
         </Link>
       </div>
       <div className="homeContent trending-section">
-        <h3>Top 10 Movies</h3>
+        <h3>Trending Now</h3>
         <div className="movie-grid">
           {topMovies.map((movie, index) => (
             <div key={movie.title} className="movie-thumbnail">

@@ -22,13 +22,17 @@ function Header() {
   useEffect(() => {
     setAuthenticated(isAuthenticated());
     setUserEmail(getCurrentUser() || '');
-  }, []);
+  }, [location.pathname]);
 
-  const handleLogout = () => {
-    logout();
-    setAuthenticated(false);
-    setUserEmail('');
-    navigate('/login');
+  const handleAuthClick = () => {
+    if (authenticated) {
+      logout();
+      setAuthenticated(false);
+      setUserEmail('');
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -70,6 +74,24 @@ function Header() {
 
       {/* Auth button */}
       <div className="d-flex align-items-center gap-3">
+        {authenticated && (
+          <Link to="/MoviePage" className="text-decoration-none">
+            <button
+              className="btn btn-primary btn-md me-2"
+              style={{
+                backgroundColor: '#8A2BE2',
+                border: 'none',
+                fontFamily: 'Montserrat, sans-serif',
+                transition: 'all 0.2s ease',
+                padding: '0.5rem 1.25rem',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#9D3BE3'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A2BE2'}
+            >
+              Movies
+            </button>
+          </Link>
+        )}
         <button
           className="btn btn-primary btn-md"
           style={{
@@ -81,9 +103,9 @@ function Header() {
           }}
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#9D3BE3'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A2BE2'}
-          onClick={handleLogout}
+          onClick={handleAuthClick}
         >
-          Sign out
+          {authenticated ? 'Sign Out' : 'Sign In'}
         </button>
       </div>
 </div>
