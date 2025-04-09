@@ -22,7 +22,7 @@ function MoviePage() {
     </button>
   </div>
 </div>
-
+<img src="{}" alt="" />
     </>
   );
 }
