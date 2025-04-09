@@ -61,10 +61,19 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+                .AllowCredentials()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });
 });
+
+// Cookies
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true; // Require consent before setting cookies
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+});
+
 
 var app = builder.Build();
 
@@ -99,6 +108,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReactAppBlah");
 
 app.UseHttpsRedirection();
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

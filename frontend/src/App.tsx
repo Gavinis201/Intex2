@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import ContactPage from "./pages/ContactPage";
 import FrequentyAsk from "./components/FrequentlyAsk";
 import MoviePage from "./pages/MoviePage";
+import CookieConsent from "./components/CookieConsent";
 
 // Component to handle layout based on route
 const AppLayout = () => {
@@ -43,6 +44,7 @@ function App() {
   return (
     <Router>
       <AppLayout />
+      <CookieConsent />
     </Router>
 
   );

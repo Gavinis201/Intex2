@@ -20,6 +20,17 @@ namespace Intex2.Controllers
 
         public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetAllMovies([FromQuery] int pageSize = 10, [FromQuery] int pageNum = 1, [FromQuery] List<string> genres = null, [FromQuery] string search = null)
         {
+            string bestMovieTitle = Request.Cookies["BestMovies"];
+            Console.WriteLine("===============COOKIE===============\n" + bestMovieTitle);
+            
+            HttpContext.Response.Cookies.Append("BestMovies", "Ganglands", new CookieOptions
+            {
+                HttpOnly = true, // only visible on http
+                Secure = true, // Cookie only transmitted over https
+                SameSite = SameSiteMode.Strict, // limits whether we're allowed to have cookies from other sites. strict = no
+                Expires = DateTime.Now.AddMinutes(30),
+            });
+            
             var query = _context.MoviesTitles.AsQueryable();
 
             // Filter by genre if provided
