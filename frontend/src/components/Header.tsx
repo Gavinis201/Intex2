@@ -6,7 +6,7 @@ function Header() {
   return (
     <>
       <header 
-        className="d-flex justify-content-between align-items-center px-4 py-2 bg-dark"
+        className="d-flex justify-content-between align-items-center px-4 py-4 bg-black border-bottom border-white"
         style={{
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           position: 'sticky',
@@ -45,11 +45,10 @@ function Header() {
             onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#9D3BE3'}
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A2BE2'}
           >
-            Sign out
+            Sign In
           </button>
         </div>
       </header>
-      {/* <hr style={{ color: 'white' }} /> */}
     </>
   );
 }

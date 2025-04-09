@@ -3,7 +3,7 @@ import { MoviesTitle } from "../types/Movie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../App.css";
+import "./AdminMoviePage.css";
 import NewMovieForm from "./NewMovieForm";
 import EditMovieForm from "../components/EditMovieForm";
 import Pagination from "../components/Pagination";
@@ -59,12 +59,12 @@ const AdminMoviePage = () => {
   return (
     <div className="container my-3">
       <div>
-          <h1 className="mb-3">Admin - Movies</h1>
-        <div className="add-container">
+          <h1 className="mb-3 text-white">Admin - Movies</h1>
+        <div className="add-container text-white">
           <p>To view all fields, use the Edit button</p>
 
         <div className="gap">
-          <input type="text" placeholder="Search for Title..." className="gap"/>
+          <input type="text" placeholder="Search for Title..." className="gaps"/>
 
           {!showForm && (
             <button className="add-button-styles gap-left" onClick={() => setShowForm(true)} >

@@ -64,7 +64,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
       <h5>Edit Movie</h5>
 
       <div className="mb-3">
-        <label className="form-label">Title</label>
+        <label className="form-label text-white">Title</label>
         <input
           name="title"
           className="form-control"
@@ -75,7 +75,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Director</label>
+        <label className="form-label text-white">Director</label>
         <input
           name="director"
           className="form-control"
@@ -85,7 +85,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Type</label>
+        <label className="form-label text-white">Type</label>
         <input
           name="type"
           className="form-control"
@@ -95,7 +95,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Release Year</label>
+        <label className="form-label text-white">Release Year</label>
         <input
           type="number"
           name="releaseYear"
@@ -106,7 +106,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Duration</label>
+        <label className="form-label text-white">Duration</label>
         <input
           name="duration"
           className="form-control"
@@ -116,7 +116,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Description</label>
+        <label className="form-label text-white">Description</label>
         <textarea
           name="description"
           className="form-control"

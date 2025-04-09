@@ -32,7 +32,7 @@ const HomeComp = () => {
       <div className="homeContent">
         <br /><br />
         <h1>Thousands of movies,<br />Best Ratings, and more</h1>
-        <h4>Ready to start? Click here</h4>
+        <h4>Ready to start?</h4>
         <Link to="/CreateAccount">
           <button className="create-account-btn">Create an Account</button>
         </Link>
@@ -56,7 +56,6 @@ const HomeComp = () => {
       
     </div>
 
-    <Footer />
     </>
   );
 };
