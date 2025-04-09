@@ -10,6 +10,8 @@ import Footer from "./components/Footer";
 import ContactPage from "./pages/ContactPage";
 import FrequentyAsk from "./components/FrequentlyAsk";
 import MoviePage from "./pages/MoviePage";
+import ThankYouPage from "./components/ThankYouPage";
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Component to handle layout based on route
 const AppLayout = () => {
@@ -26,10 +28,15 @@ const AppLayout = () => {
           <Route path="/Login" element={<LoginPage />} />
           <Route path="/CreateAccount" element={<CreateAccountPage />} />
           <Route path="/Privacy" element={<PrivacyPage />} />
-          <Route path="/MoviePage" element={<MoviePage />} />
+          <Route path="/MoviePage" element={
+            <ProtectedRoute>
+                <MoviePage />
+            </ProtectedRoute>
+          } />
           <Route path="/Contact" element={<ContactPage />} />
           <Route path="/FAQ" element={<FrequentyAsk />} />
           <Route path="/AdminMovies" element={<AdminMoviePage />} />
+          <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/ProductDetail" />
         </Routes>
      <Footer />
