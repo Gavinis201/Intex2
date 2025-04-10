@@ -4,6 +4,20 @@ obj/
 [Bb]in/
 [Oo]bj/
 
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
+
 # Visual Studio files
 .vs/
 .vs/**/FileContentIndex/
@@ -16,25 +30,6 @@ obj/
 *.userprefs
 *.DotSettings.user
 *.sln.iml
-
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
-
-# Visual Studio cache/options directory
-.vs/
 
 # ReSharper
 _ReSharper*/
@@ -94,13 +89,6 @@ project.nuget.cache
 # Local History for Visual Studio
 .localhistory/
 
-# Visual Studio 2015 cache/options directory
-.vs/
-
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-
 # NUNIT
 *.VisualState.xml
 TestResult.xml
@@ -115,28 +103,6 @@ dlldata.c
 project.lock.json
 artifacts/
 
-# Visual Studio 2015
-.vs/
-
-# Visual Studio 2017
-.vs/
-
-# Visual Studio 2019
-.vs/
-
-# Visual Studio 2022
-.vs/
-
-# Visual Studio Code
-.vscode/
-
-# Visual Studio for Mac
-*.userprefs
-
-# JetBrains Rider
-.idea/
-*.sln.iml
-
 # User-specific files
 *.rsuser
 *.suo
@@ -144,66 +110,65 @@ artifacts/
 *.userosscache
 *.sln.docstates
 
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
+# Environment files
+.env
+.env.development
+.env.test
+.env.production
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Visual Studio 2015/2017 cache/options directory
-.vs/
+# Azure Functions localsettings file
+local.settings.json
 
-# Visual Studio 2017 auto generated files
-Generated\ Files/
+# Backup & report files from converting an old project file
+# to a newer Visual Studio version. Backup files are not needed,
+# because we have git ;-)
+_UpgradeReport_Files/
+Backup*/
+Upgrade[X]-Report*.XML
+Upgrade[X]-Report*.htm
+ServiceFabricBackup/
+*.rptproj.bak
 
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
 
-# NUnit
-*.VisualState.xml
-TestResult.xml
-nunit-*.xml
+# Business Intelligence projects
+*.rdl.data
+*.bim.layout
+*.bim_*.settings
+*.rptproj.rsuser
+*- [Bb]ackup.rdl
+*- [Bb]ackup ([0-9]).rdl
+*- [Bb]ackup ([0-9][0-9]).rdl
 
-# Build Results of an ATL Project
-[Dd]ebugPS/
-[Rr]eleasePS/
-dlldata.c
+# Microsoft Fakes
+FakesAssemblies/
 
-# DNX
-project.lock.json
-artifacts/
+# GhostDoc plugin setting file
+*.GhostDoc.xml
 
-# Visual Studio 2015/2017 cache/options directory
-.vs/
+# Node.js Tools for Visual Studio
+.ntvs_analysis.dat
+node_modules/
 
-# Visual Studio 2017 auto generated files
-Generated\ Files/
+# Visual Studio 6 build log
+*.plg
 
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
+# Visual Studio 6 workspace options file
+*.opt
 
-# NUnit
-*.VisualState.xml
-TestResult.xml
-nunit-*.xml
+# Visual Studio 6 auto-generated workspace file (contains which files were open etc.)
+*.vbw
 
-# Build Results of an ATL Project
-[Dd]ebugPS/
-[Rr]eleasePS/
-dlldata.c
-
-# DNX
-project.lock.json
-artifacts/
+# Visual Studio 6 auto-generated project file (contains which files were open etc.)
+*.vbp
+*.vbg
+*.vbs
+*.vbd
+*.vbe
