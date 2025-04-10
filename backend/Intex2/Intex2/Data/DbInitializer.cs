@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
 
 namespace Intex2.Models;
 
@@ -17,9 +18,12 @@ public static class DbInitializer
             try
             {
                 var context = services.GetRequiredService<MoviesDBContext>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                
+                // Ensure the database is created and migrations are applied
                 context.Database.EnsureCreated();
                 
-                // Now execute our custom SQL to create Identity tables
+                // Create Identity tables if they don't exist
                 var connection = (SqliteConnection)context.Database.GetDbConnection();
                 if (connection.State != System.Data.ConnectionState.Open)
                 {
@@ -33,6 +37,16 @@ public static class DbInitializer
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlScript;
                 command.ExecuteNonQuery();
+                
+                // Create roles if they don't exist
+                if (!roleManager.RoleExistsAsync("Administrator").Result)
+                {
+                    roleManager.CreateAsync(new IdentityRole("Administrator")).Wait();
+                }
+                if (!roleManager.RoleExistsAsync("User").Result)
+                {
+                    roleManager.CreateAsync(new IdentityRole("User")).Wait();
+                }
                 
                 Console.WriteLine("Database initialization complete");
             }

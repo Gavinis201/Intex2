@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Data.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,11 +81,34 @@ app.Use(async (context, next) =>
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await Intex2.Data.IdentitySeeder.SeedRolesAndAdmin(services);
-}
+    try
+    {
+        var context = services.GetRequiredService<MoviesDBContext>();
+        
+        // Only create Identity tables if they don't exist
+        if (!context.Database.GetPendingMigrations().Any())
+        {
+            // Execute the Identity tables creation script
+            var connection = (SqliteConnection)context.Database.GetDbConnection();
+            if (connection.State != System.Data.ConnectionState.Open)
+            {
+                connection.Open();
+            }
 
-// Initialize the database
-app.InitializeDatabase();
+            string sqlScript = File.ReadAllText("Data/CreateIdentityTables.sql");
+            using var command = connection.CreateCommand();
+            command.CommandText = sqlScript;
+            command.ExecuteNonQuery();
+        }
+        
+        await Intex2.Data.IdentitySeeder.SeedRolesAndAdmin(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

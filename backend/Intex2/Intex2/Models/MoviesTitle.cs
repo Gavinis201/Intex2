@@ -91,5 +91,7 @@ public class MoviesTitle
 
     public int? Thrillers { get; set; }
     
+    public string? Movie_poster { get; set; }
+    
     
 }

@@ -90,6 +90,7 @@ public partial class MoviesDBContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.TvComedies).HasColumnName("TV Comedies");
             entity.Property(e => e.TvDramas).HasColumnName("TV Dramas");
             entity.Property(e => e.Type).HasColumnName("type");
+            entity.Property(e => e.Movie_poster).HasColumnName("movie_poster");
         });
 
         modelBuilder.Entity<MoviesUser>(entity =>
