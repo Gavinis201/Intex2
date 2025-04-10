@@ -18,14 +18,16 @@ function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchInput.trim()) {
-      navigate(`/moviepage?title=${encodeURIComponent(searchInput.trim())}`);
+      navigate(`/recommendation?query=${encodeURIComponent(searchInput.trim())}`);
     }
   };
   // Debug: check current path
   console.log("Current path:", location.pathname);
 
-  // Normalize path to lowercase just in case
-  const showSearchBar = location.pathname.toLowerCase() === '/moviepage';
+  // Show search bar on MoviePage, SearchPage, and Recommendations page
+  const showSearchBar = location.pathname.toLowerCase() === '/moviepage' || 
+                       location.pathname.toLowerCase() === '/search' ||
+                       location.pathname.toLowerCase() === '/recommendation';
 
   useEffect(() => {
     setAuthenticated(isAuthenticated());
@@ -83,20 +85,19 @@ function Header() {
       </div>
       <div className="d-flex flex-row custom-gap">
         
-      {/* Search bar only on /moviepage */}
+      {/* Search bar on MoviePage and SearchPage */}
       {showSearchBar && (
-    <form onSubmit={handleSearch}>
-      <FontAwesomeIcon icon={faSearch} style={{ color: 'white', fontSize: '1.2rem', marginRight: '10px' }} />
-      <input
-        type="text"
-        className="movieSearch"
-        placeholder="Movie Titles..."
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-      />
-    </form>
-)}
-
+        <form onSubmit={handleSearch} className="d-flex align-items-center">
+          <FontAwesomeIcon icon={faSearch} style={{ color: 'white', fontSize: '1.2rem', marginRight: '10px' }} />
+          <input
+            type="text"
+            className="movieSearch"
+            placeholder="Search movies..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+        </form>
+      )}
 
       {/* Auth button */}
       <div className="d-flex align-items-center gap-3">

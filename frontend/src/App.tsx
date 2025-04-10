@@ -13,6 +13,7 @@ import MoviePage from "./pages/MoviePage";
 import ThankYouPage from "./components/ThankYouPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RecommendationsPage from "./pages/Recommendations";
+import SearchPage from "./components/SearchPage";
 
 // Component to handle layout based on route
 const AppLayout = () => {
@@ -29,14 +30,12 @@ const AppLayout = () => {
           <Route path="/Login" element={<LoginPage />} />
           <Route path="/CreateAccount" element={<CreateAccountPage />} />
           <Route path="/Privacy" element={<PrivacyPage />} />
-          <Route path="/MoviePage" element={
-            <ProtectedRoute>
-              <MoviePage />
-            </ProtectedRoute>
-          } />
+          <Route path="/MoviePage" element={<MoviePage />}/>
           <Route path="/Contact" element={<ContactPage />} />
           <Route path="/Recommendation" element={<RecommendationsPage />} />
+          <Route path="/Recommendation/:query" element={<RecommendationsPage />} />
           <Route path="/FAQ" element={<FrequentyAsk />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/AdminMovies" element={<AdminMoviePage />} />
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/ProductDetail" />
@@ -53,7 +52,6 @@ function App() {
     <Router>
       <AppLayout />
     </Router>
-
   );
 }
 
