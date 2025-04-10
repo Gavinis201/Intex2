@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text;
+using Intex2.Models;
 
 [Route("api/genre-recommender")]
 [ApiController]
@@ -14,19 +15,6 @@ public class GenreRecommenderController : ControllerBase
     {
         _httpClient = new HttpClient();
         _configuration = configuration;
-    }
-
-    public class RecommendationRequest
-    {
-        public string title { get; set; }
-        public int top_n { get; set; } = 5;
-    }
-
-    // Request expected by Azure ML endpoint
-    public class AzureMLRequest
-    {
-        public string movie_title { get; set; }
-        public int top_n { get; set; }
     }
 
     [HttpPost("recommend")]
@@ -43,7 +31,7 @@ public class GenreRecommenderController : ControllerBase
             _httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");
 
             // Convert from our API format to the format expected by Azure ML
-            var azureRequest = new AzureMLRequest
+            var azureRequest = new GenreMLRequest
             {
                 movie_title = input.title,
                 top_n = input.top_n

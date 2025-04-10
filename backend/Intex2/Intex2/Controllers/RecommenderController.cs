@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text;
+using Intex2.Models;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,12 +17,7 @@ public class RecommenderController : ControllerBase
         _configuration = configuration;
     }
 
-    // Model to represent the incoming payload
-    public class RecommendationRequest
-    {
-        public string title { get; set; } // <-- new input field
-        public int top_n { get; set; } = 5;
-    }
+    // Removed internal RecommendationRequest class - now using shared model
 
     [HttpPost("recommend")]
     public async Task<IActionResult> Recommend([FromBody] RecommendationRequest input)
