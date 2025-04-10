@@ -289,7 +289,6 @@ function MoviePage() {
     try {
       console.log(`Fetching recommendations for movie ID: ${showId}`);
 
-      // Use our backend proxy instead of directly calling Azure ML
       const response = await fetch(
         'https://localhost:5000/api/hybrid-recommender/recommend',
         {
@@ -314,18 +313,48 @@ function MoviePage() {
       console.log('Recommendations received:', data);
 
       // Map through the recommendations and try to find matching posters in allMovies
-      const enhancedRecommendations = data.map((rec: Recommendation) => {
-        const matchingMovie = allMovies.find((m) => m.showId === rec.show_id);
-        return {
-          ...rec,
-          // Add the movie_poster if we found a match
-          movie_poster: matchingMovie?.movie_poster || null,
-        };
-      });
+      const enhancedRecommendations = await Promise.all(
+        data.map(async (rec: Recommendation) => {
+          try {
+            // First try to find the movie in allMovies
+            const matchingMovie = allMovies.find((m) => m.showId === rec.show_id);
+            if (matchingMovie?.movie_poster) {
+              return {
+                ...rec,
+                movie_poster: matchingMovie.movie_poster,
+              };
+            }
+
+            // If not found, try to fetch the movie details
+            const movieResponse = await fetch(
+              `https://localhost:5000/MoviesTitle/AllMovies?search=${encodeURIComponent(rec.title)}`
+            );
+            if (movieResponse.ok) {
+              const movieData = await movieResponse.json();
+              const movie = movieData.movies?.[0];
+              return {
+                ...rec,
+                movie_poster: movie?.movie_poster || comingSoon,
+              };
+            }
+            return {
+              ...rec,
+              movie_poster: comingSoon,
+            };
+          } catch (error) {
+            console.error('Error fetching movie poster:', error);
+            return {
+              ...rec,
+              movie_poster: comingSoon,
+            };
+          }
+        })
+      );
 
       setRecommendations(enhancedRecommendations);
     } catch (error) {
       console.error('Error fetching recommendations:', error);
+      setRecommendations([]);
     } finally {
       setLoadingRecommendations(false);
     }
@@ -491,31 +520,32 @@ function MoviePage() {
                 <div className="loading">Loading recommendations...</div>
               ) : recommendations.length > 0 ? (
                 <div className="recommendations-carousel">
-                  {recommendations.map((recommendation) => {
-                    return (
-                      <div
-                        key={recommendation.show_id}
-                        className="recommendation-item"
-                        onClick={() => {
-                          const movie = allMovies.find(
-                            (m) => m.showId === recommendation.show_id
-                          );
-                          if (movie) {
-                            handleMovieClick(movie);
-                          }
+                  {recommendations.map((recommendation) => (
+                    <div
+                      key={recommendation.show_id}
+                      className="recommendation-item"
+                      onClick={() => {
+                        const movie = allMovies.find(
+                          (m) => m.showId === recommendation.show_id
+                        );
+                        if (movie) {
+                          handleMovieClick(movie);
+                        }
+                      }}
+                    >
+                      <img
+                        src={recommendation.movie_poster || comingSoon}
+                        alt={recommendation.title}
+                        className="recommendation-poster"
+                        onError={(e) => {
+                          e.currentTarget.src = comingSoon;
                         }}
-                      >
-                        <img
-                          src={recommendation.movie_poster }
-                          alt={recommendation.title}
-                          onError={handleImageError}
-                        />
-                        <div className="recommendation-title">
-                          {recommendation.title}
-                        </div>
+                      />
+                      <div className="recommendation-title">
+                        {recommendation.title}
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="no-recommendations">
