@@ -237,4 +237,47 @@
   .movie-info p {
     font-size: 0.8rem;
   }
+}
+
+/* Genre recommendations specific styling */
+.genre-recommendations {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 8px;
+  border: none !important;
+  outline: none !important;
+}
+
+.genre-recommendations .recommendations-title {
+  color: white;
+}
+
+.genre-card {
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.genres-container {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.genre-tag {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 3px 8px;
+  margin: 2px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
 } 

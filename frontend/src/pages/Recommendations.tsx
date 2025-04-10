@@ -3,9 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import './Recommendations.css';
 import comingSoon from '../assets/images/ComingSoon.png';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 type Movie = {
   showId: string;
@@ -25,6 +25,7 @@ type Recommendation = {
   title: string;
   similarity: number;
   movie_poster?: string;
+  genres?: string[];
 };
 
 export default function RecommendationsPage() {
@@ -32,11 +33,17 @@ export default function RecommendationsPage() {
   const query = searchParams.get('query') || '';
   const [movies, setMovies] = useState<Movie[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [genreRecommendations, setGenreRecommendations] = useState<
+    Recommendation[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [loadingRecs, setLoadingRecs] = useState(false);
+  const [loadingGenreRecs, setLoadingGenreRecs] = useState(false);
   const [error, setError] = useState('');
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
-  const [flippedRecCards, setFlippedRecCards] = useState<Set<string>>(new Set());
+  const [flippedRecCards, setFlippedRecCards] = useState<Set<string>>(
+    new Set()
+  );
 
   const carouselSettings = {
     dots: true,
@@ -45,30 +52,30 @@ export default function RecommendationsPage() {
     slidesToShow: 4,
     slidesToScroll: 1,
     centerMode: false,
-    centerPadding: "0px",
+    centerPadding: '0px',
     responsive: [
       {
         breakpoint: 1200,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 900,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   const fetchMovies = async () => {
@@ -89,26 +96,29 @@ export default function RecommendationsPage() {
 
   const fetchRecommendations = async () => {
     if (!query) return;
-    
+
     try {
       setLoadingRecs(true);
-      const response = await fetch('https://localhost:5000/api/recommender/recommend', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: query,
-          top_n: 10,
-        }),
-      });
+      const response = await fetch(
+        'https://localhost:5000/api/recommender/recommend',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: query,
+            top_n: 10,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Server returned ${response.status}`);
       }
 
       const data = await response.json();
-      
+
       // Fetch movie posters for recommendations
       const recommendationsWithPosters = await Promise.all(
         data.map(async (rec: Recommendation) => {
@@ -119,12 +129,12 @@ export default function RecommendationsPage() {
             const movie = movieResponse.data.movies?.[0];
             return {
               ...rec,
-              movie_poster: movie?.movie_poster || comingSoon
+              movie_poster: movie?.movie_poster || comingSoon,
             };
           } catch (err) {
             return {
               ...rec,
-              movie_poster: comingSoon
+              movie_poster: comingSoon,
             };
           }
         })
@@ -138,8 +148,128 @@ export default function RecommendationsPage() {
     }
   };
 
+  const fetchGenreRecommendations = async () => {
+    if (!query) return;
+
+    try {
+      setLoadingGenreRecs(true);
+      console.log('Fetching genre recommendations for:', query);
+
+      const response = await fetch(
+        'https://localhost:5000/api/genre-recommender/recommend',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: query,
+            top_n: 10,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          `Genre recommender error: ${response.status} - ${errorText}`
+        );
+        throw new Error(
+          `Genre recommender returned ${response.status}: ${errorText}`
+        );
+      }
+
+      // Read response as text first to log it
+      const responseText = await response.text();
+      console.log('Raw genre response:', responseText);
+
+      let data;
+      try {
+        // Then parse it as JSON
+        data = JSON.parse(responseText);
+        console.log('Parsed genre recommendations:', data);
+      } catch (jsonError) {
+        console.error('Failed to parse genre response as JSON:', jsonError);
+        throw new Error('Invalid JSON response from genre recommender');
+      }
+
+      // Check if data is an object with results property or an array
+      let recommendationsArray = Array.isArray(data)
+        ? data
+        : data?.results
+          ? data.results
+          : data?.recommendations
+            ? data.recommendations
+            : null;
+
+      if (!recommendationsArray) {
+        console.error(
+          'Unexpected response format from genre recommender:',
+          data
+        );
+        setLoadingGenreRecs(false);
+        return;
+      }
+
+      console.log('Extracted recommendations array:', recommendationsArray);
+
+      if (recommendationsArray.length === 0) {
+        console.log('No genre recommendations received');
+        setLoadingGenreRecs(false);
+        return;
+      }
+
+      const withPosters = await Promise.all(
+        recommendationsArray.map(async (rec: any) => {
+          // Normalize recommendation object structure
+          const title =
+            typeof rec === 'string' ? rec : rec.title || rec.movie_title || '';
+          const similarity =
+            typeof rec === 'object' ? rec.similarity || rec.score || 0.5 : 0.5;
+          const genres = rec.genres || [];
+
+          if (!title) {
+            console.error('Invalid recommendation format:', rec);
+            return null;
+          }
+
+          try {
+            const res = await axios.get(
+              `https://localhost:5000/MoviesTitle/AllMovies?search=${encodeURIComponent(title)}`
+            );
+            const movie = res.data.movies?.[0];
+            return {
+              title,
+              similarity,
+              genres,
+              movie_poster: movie?.movie_poster || comingSoon,
+            };
+          } catch (err) {
+            console.error('Error fetching poster for genre rec:', title, err);
+            return { title, similarity, genres, movie_poster: comingSoon };
+          }
+        })
+      );
+
+      // Filter out any null entries
+      const validRecommendations = withPosters.filter(Boolean);
+
+      console.log(
+        'Final genre recommendations with posters:',
+        validRecommendations
+      );
+
+      // Set the genre recommendations
+      setGenreRecommendations(validRecommendations);
+    } catch (err) {
+      console.error('Error fetching genre-based recommendations:', err);
+    } finally {
+      setLoadingGenreRecs(false);
+    }
+  };
+
   const toggleCard = (showId: string) => {
-    setFlippedCards(prev => {
+    setFlippedCards((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(showId)) {
         newSet.delete(showId);
@@ -151,7 +281,7 @@ export default function RecommendationsPage() {
   };
 
   const toggleRecCard = (title: string) => {
-    setFlippedRecCards(prev => {
+    setFlippedRecCards((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(title)) {
         newSet.delete(title);
@@ -166,9 +296,11 @@ export default function RecommendationsPage() {
     if (query) {
       fetchMovies();
       fetchRecommendations();
+      fetchGenreRecommendations();
     } else {
       setMovies([]);
       setRecommendations([]);
+      setGenreRecommendations([]);
       setLoading(false);
     }
   }, [query]);
@@ -176,7 +308,7 @@ export default function RecommendationsPage() {
   return (
     <div className="recommendations-page">
       <h1 className="recommendations-title">Search Results for "{query}"</h1>
-      
+
       {loading ? (
         <div className="loading">Loading...</div>
       ) : error ? (
@@ -188,13 +320,13 @@ export default function RecommendationsPage() {
           <div className="search-results-grid">
             {movies.map((movie) => (
               <div key={movie.showId} className="movie-card-container">
-                <div 
+                <div
                   className={`movie-card ${flippedCards.has(movie.showId) ? 'flipped' : ''}`}
                   onClick={() => toggleCard(movie.showId)}
                 >
                   <div className="card-front">
-                    <img 
-                      src={movie.movie_poster || comingSoon} 
+                    <img
+                      src={movie.movie_poster || comingSoon}
                       alt={movie.title}
                       className="movie-poster"
                     />
@@ -202,11 +334,21 @@ export default function RecommendationsPage() {
                   <div className="card-back">
                     <div className="movie-info">
                       <h3>{movie.title}</h3>
-                      <p><strong>Year:</strong> {movie.releaseYear}</p>
-                      <p><strong>Rating:</strong> {movie.rating}</p>
-                      <p><strong>Duration:</strong> {movie.duration}</p>
-                      <p><strong>Director:</strong> {movie.director}</p>
-                      <p><strong>Description:</strong> {movie.description}</p>
+                      <p>
+                        <strong>Year:</strong> {movie.releaseYear}
+                      </p>
+                      <p>
+                        <strong>Rating:</strong> {movie.rating}
+                      </p>
+                      <p>
+                        <strong>Duration:</strong> {movie.duration}
+                      </p>
+                      <p>
+                        <strong>Director:</strong> {movie.director}
+                      </p>
+                      <p>
+                        <strong>Description:</strong> {movie.description}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -222,13 +364,13 @@ export default function RecommendationsPage() {
                   <Slider {...carouselSettings}>
                     {recommendations.map((rec) => (
                       <div key={rec.title} className="carousel-item">
-                        <div 
+                        <div
                           className={`movie-card ${flippedRecCards.has(rec.title) ? 'flipped' : ''}`}
                           onClick={() => toggleRecCard(rec.title)}
                         >
                           <div className="card-front">
-                            <img 
-                              src={rec.movie_poster || comingSoon} 
+                            <img
+                              src={rec.movie_poster || comingSoon}
                               alt={rec.title}
                               className="movie-poster"
                             />
@@ -236,7 +378,63 @@ export default function RecommendationsPage() {
                           <div className="card-back">
                             <div className="movie-info">
                               <h3>{rec.title}</h3>
-                              <p><strong>Similarity Score:</strong> {rec.similarity.toFixed(3)}</p>
+                              <p>
+                                <strong>Similarity Score:</strong>{' '}
+                                {rec.similarity.toFixed(3)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </Slider>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Genre recommendations section - only render if there are recommendations */}
+          {genreRecommendations.length > 0 && !loadingGenreRecs && (
+            <div className="recommendations-section genre-recommendations">
+              <h2 className="recommendations-title">Similar by Genre</h2>
+              <div className="carousel-container">
+                <div className="carousel-wrapper">
+                  <Slider {...carouselSettings}>
+                    {genreRecommendations.map((rec) => (
+                      <div key={`${rec.title}-genre`} className="carousel-item">
+                        <div
+                          className={`movie-card genre-card ${flippedRecCards.has(`${rec.title}-genre`) ? 'flipped' : ''}`}
+                          onClick={() => toggleRecCard(`${rec.title}-genre`)}
+                        >
+                          <div className="card-front">
+                            <img
+                              src={rec.movie_poster || comingSoon}
+                              alt={rec.title}
+                              className="movie-poster"
+                            />
+                            {rec.genres && rec.genres.length > 0 && (
+                              <div className="genres-container">
+                                {rec.genres.map((genre, index) => (
+                                  <span key={index} className="genre-tag">
+                                    {genre}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <div className="card-back">
+                            <div className="movie-info">
+                              <h3>{rec.title}</h3>
+                              <p>
+                                <strong>Similarity Score:</strong>{' '}
+                                {rec.similarity.toFixed(3)}
+                              </p>
+                              {rec.genres && rec.genres.length > 0 && (
+                                <p>
+                                  <strong>Genres:</strong>{' '}
+                                  {rec.genres.join(', ')}
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>

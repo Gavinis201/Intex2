@@ -158,4 +158,31 @@
   .movie-card {
     height: 250px;
   }
+}
+
+/* Genre recommendations specific styling */
+.genre-recommendations {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e74c3c;
+  background-color: rgba(231, 76, 60, 0.05);
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.genre-card {
+  border: 2px solid #e74c3c;
+}
+
+.genre-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #e74c3c;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  z-index: 2;
 } 
