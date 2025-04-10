@@ -2,6 +2,7 @@ using Intex2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace Intex2.Controllers
 {
@@ -16,18 +17,46 @@ namespace Intex2.Controllers
             _context = context;
         }
 
-        [HttpGet("AllMovies")]
+        private int LevenshteinDistance(string s1, string s2)
+        {
+            int[,] distance = new int[s1.Length + 1, s2.Length + 1];
 
-        public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetAllMovies([FromQuery] int pageSize = 10, [FromQuery] int pageNum = 1, [FromQuery] List<string> genres = null, [FromQuery] string search = null)
+            for (int i = 0; i <= s1.Length; i++)
+                distance[i, 0] = i;
+            for (int j = 0; j <= s2.Length; j++)
+                distance[0, j] = j;
+
+            for (int i = 1; i <= s1.Length; i++)
+            {
+                for (int j = 1; j <= s2.Length; j++)
+                {
+                    int cost = (s1[i - 1] == s2[j - 1]) ? 0 : 1;
+                    distance[i, j] = Math.Min(
+                        Math.Min(distance[i - 1, j] + 1, distance[i, j - 1] + 1),
+                        distance[i - 1, j - 1] + cost);
+                }
+            }
+
+            return distance[s1.Length, s2.Length];
+        }
+
+        [HttpGet("AllMovies")]
+        public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetAllMovies(
+            [FromQuery] int pageSize = 10, 
+            [FromQuery] int pageNum = 1, 
+            [FromQuery] string genres = null, 
+            [FromQuery] string search = null)
         {
             var query = _context.MoviesTitles.AsQueryable();
 
             // Filter by genre if provided
-            if (genres != null && genres.Any())
+            if (!string.IsNullOrWhiteSpace(genres))
             {
-                foreach (var genre in genres)
+                var genreList = genres.Split(',');
+                foreach (var genre in genreList)
                 {
-                    query = query.Where(m => EF.Property<int?>(m, genre) == 1);
+                    var propertyName = genre.Trim();
+                    query = query.Where(m => EF.Property<int?>(m, propertyName) == 1);
                 }
             }
 
@@ -35,11 +64,43 @@ namespace Intex2.Controllers
             if (!string.IsNullOrWhiteSpace(search))
             {
                 var loweredSearch = search.ToLower();
-                query = query.Where(m => m.Title.ToLower().Contains(loweredSearch));
+                var searchWords = loweredSearch.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                
+                // First try exact matches
+                var exactMatches = await query
+                    .Where(m => m.Title.ToLower().Contains(loweredSearch))
+                    .ToListAsync();
+
+                if (exactMatches.Any())
+                {
+                    return Ok(new
+                    {
+                        movies = exactMatches,
+                        totalNumMovies = exactMatches.Count
+                    });
+                }
+
+                // If no exact matches, try fuzzy search
+                var allMovies = await query.ToListAsync();
+                var fuzzyMatches = allMovies
+                    .Select(m => new
+                    {
+                        Movie = m,
+                        Distance = LevenshteinDistance(m.Title.ToLower(), loweredSearch)
+                    })
+                    .Where(x => x.Distance <= 3) // Allow up to 3 character differences
+                    .OrderBy(x => x.Distance)
+                    .Select(x => x.Movie)
+                    .ToList();
+
+                return Ok(new
+                {
+                    movies = fuzzyMatches,
+                    totalNumMovies = fuzzyMatches.Count
+                });
             }
 
             var total = await query.CountAsync();
-
             var movies = await query
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
@@ -51,7 +112,6 @@ namespace Intex2.Controllers
                 totalNumMovies = total
             });
         }
-
 
         // GET: /MoviesTitle/{id}
         [HttpGet("{id}")]

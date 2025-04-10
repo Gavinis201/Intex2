@@ -45,6 +45,7 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #4c4949;
 }
 
 .card-front {
@@ -52,7 +53,7 @@
 }
 
 .card-back {
-  background-color: #fff;
+  background-color: #4c4949;
   transform: rotateY(180deg);
   padding: 1rem;
   overflow-y: auto;
