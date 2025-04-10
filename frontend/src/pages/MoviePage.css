@@ -1,7 +1,7 @@
 .image-container {
   position: relative;
   width: 100%;
-  height: 75vh;
+  height: 70vh;
   overflow: hidden;
 }
 
@@ -10,14 +10,14 @@
   height: 100%; /* Takes full height of .image-container */
   display: block;
     object-fit: cover;
-  object-position: center 25%; /* Shift image up for better framing */
+  object-position: center 10%; 
 }
 
 
 .button-row {
     position: absolute;
   bottom: 15%;
-  left: 66%;
+  left: 16%;
   transform: translateX(-50%);
     display: flex;
   gap: 20px;
@@ -542,4 +542,14 @@
 .slick-track {
   display: flex;
   gap: 1rem;
+}
+
+.movie-description {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #ffffff;
+  font-size: 1.1rem;
+  max-width: 600px;
+  line-height: 1.5;
+  margin: 1rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }

@@ -1,4 +1,3 @@
-import interstellar from '../assets/images/InterstellarMax.avif';
 import './MoviePage.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -10,7 +9,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import comingSoon from '../assets/images/ComingSoon.png';
-
+import mainPage from '../assets/images/Jaws1.avif'
 type Movie = {
   showId: string;
   title: string;
@@ -363,15 +362,21 @@ function MoviePage() {
   return (
     <div className="movie-page">
       <div className="image-container">
-        <img src={interstellar} alt="Interstellar" className="interstelllar" />
+        <img src={mainPage} alt="Jaws" className="interstelllar" />
         <div className="button-row">
-          <button className="play-button">
-            <FontAwesomeIcon icon={faPlay} className="icon" /> Play
-          </button>
-          <button className="info-button">
-            <FontAwesomeIcon icon={faCircleInfo} className="icon" />
-            <b> More Info</b>
-          </button>
+          <div className="jaws">
+            <h1>Jaws</h1>
+            <p className="movie-description">When a great white shark terrorizes a small beach town, the local police chief, a marine biologist, and a grizzled fisherman set out to stop it.</p>
+            <div className="d-flex gap-5">
+              <button className="play-button">
+                <FontAwesomeIcon icon={faPlay} className="icon" /> Play
+              </button>
+              <button className="info-button">
+                <FontAwesomeIcon icon={faCircleInfo} className="icon" />
+                <b> More Info</b>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
