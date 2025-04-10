@@ -232,3 +232,109 @@ color: black;
 .custom-gap {
   gap: 1em;
 }
+
+.contact-form {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.contact-info {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: rgba(138, 43, 226, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-purple);
+}
+
+.contact-info p {
+  margin: 10px 0;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #333;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.submit-button {
+  background-color: var(--primary-purple);
+  color: white;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.submit-button:hover {
+  background-color: #5500d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(138, 43, 226, 0.3);
+}
+
+.button-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.nav-button {
+  background-color: var(--primary-purple);
+  color: white;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-button:hover {
+  background-color: #5500d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(138, 43, 226, 0.3);
+}

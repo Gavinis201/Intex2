@@ -3,13 +3,22 @@ import axios from 'axios';
 
 const API_URL = 'https://localhost:5000/api/auth/';
 
+// Helper function to get a cookie value
+const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
+};
+
 // Configure axios to ignore SSL certificate validation in development
 // axios.defaults.httpsAgent = new (require('https').Agent)({ rejectUnauthorized: false });
 
 // Add a request interceptor to add the auth token to all requests
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
+    // Try to get token from cookie first, then localStorage as fallback
+    const token = getCookie('authToken') || localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -46,8 +55,13 @@ export const login = async (email: string, password: string) => {
 };
 
 export const logout = () => {
+  // Clear localStorage
   localStorage.removeItem('authToken');
   localStorage.removeItem('userEmail');
+  
+  // Clear cookies
+  document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  document.cookie = 'userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 };
 
 export const register = async (userData: any, authData: any) => {
@@ -75,13 +89,16 @@ export const register = async (userData: any, authData: any) => {
 };
 
 export const isAuthenticated = () => {
-  return localStorage.getItem('authToken') !== null;
+  // Check both cookie and localStorage
+  return getCookie('authToken') !== null || localStorage.getItem('authToken') !== null;
 };
 
 export const getCurrentUser = () => {
-  return localStorage.getItem('userEmail');
+  // Try cookie first, then localStorage
+  return getCookie('userEmail') || localStorage.getItem('userEmail');
 };
 
 export const getAuthToken = () => {
-  return localStorage.getItem('authToken');
+  // Try cookie first, then localStorage
+  return getCookie('authToken') || localStorage.getItem('authToken');
 }; 

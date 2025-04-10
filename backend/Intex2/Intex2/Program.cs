@@ -62,7 +62,8 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
                 .AllowAnyMethod()
-                .AllowAnyHeader();
+                .AllowAnyHeader()
+                .AllowCredentials();
         });
 });
 
@@ -71,7 +72,7 @@ var app = builder.Build();
 // Content Security Policy: Attack Mitigations
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Add("Content-Security-Policy",
+    context.Response.Headers.Append("Content-Security-Policy",
         "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'");
     await next();
 });
@@ -99,6 +100,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowReactAppBlah");
 
 app.UseHttpsRedirection();
+
+app.UseCookiePolicy(); // Add cookies
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

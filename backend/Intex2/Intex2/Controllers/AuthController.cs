@@ -79,6 +79,19 @@ public class AuthController : ControllerBase
 
             var token = GetToken(authClaims);
             Console.WriteLine($"Token generated for user: {user.Email}, expires: {token.ValidTo}");
+            
+            // Set auth cookie
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = token.ValidTo
+            };
+            Response.Cookies.Append("authToken", new JwtSecurityTokenHandler().WriteToken(token), cookieOptions);
+            Response.Cookies.Append("userEmail", user.Email, cookieOptions);
+            
+            Console.WriteLine("Set authentication cookies");
 
             return Ok(new AuthResponse
             {
@@ -168,6 +181,17 @@ public class AuthController : ControllerBase
         };
 
         var token = GetToken(authClaims);
+        
+        // Set auth cookie
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = token.ValidTo
+        };
+        Response.Cookies.Append("authToken", new JwtSecurityTokenHandler().WriteToken(token), cookieOptions);
+        Response.Cookies.Append("userEmail", user.Email, cookieOptions);
 
         return Ok(new AuthResponse
         {
