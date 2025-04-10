@@ -510,8 +510,8 @@
 /* Slick Carousel Custom Styles */
 .slick-prev,
 .slick-next {
-  width: 40px !important;
-  height: 40px !important;
+  width: 50px !important;
+  height: 50px !important;
   background: rgba(0, 0, 0, 0.6) !important;
   border-radius: 50% !important;
   z-index: 1 !important;
@@ -525,7 +525,7 @@
 
 .slick-prev:before,
 .slick-next:before {
-  font-size: 20px !important;
+  font-size: 30px !important;
   color: #fff !important;
   opacity: 1 !important;
 }
