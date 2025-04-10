@@ -41,11 +41,15 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Lockout.AllowedForNewUsers = true;
     
     // Configure sign-in settings
-    options.SignIn.RequireConfirmedEmail = false; // Set to true if you want to require email confirmation
+    options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedAccount = false;
+
+    // Configure 2FA
+    options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
 })
 .AddEntityFrameworkStores<MoviesDBContext>()
-.AddDefaultTokenProviders();
+.AddDefaultTokenProviders()
+.AddTokenProvider<AuthenticatorTokenProvider<ApplicationUser>>(TokenOptions.DefaultAuthenticatorProvider);
 
 // Get JWT settings from environment variables or fall back to configuration
 var jwtAudience = Environment.GetEnvironmentVariable("JWT_VALID_AUDIENCE") ?? 

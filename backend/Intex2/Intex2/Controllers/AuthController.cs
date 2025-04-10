@@ -540,43 +540,44 @@ public class AuthController : ControllerBase
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                return NotFound(new AuthResponse { Success = false, Message = "User not found" });
+                return Unauthorized(new AuthResponse
+                {
+                    Success = false,
+                    Message = "Invalid user"
+                });
             }
-            
-            // Verify the code
+
+            // Verify the 2FA code
             var isValid = await _userManager.VerifyTwoFactorTokenAsync(
                 user, 
-                _userManager.Options.Tokens.AuthenticatorTokenProvider, 
+                TokenOptions.DefaultAuthenticatorProvider, 
                 model.Code);
-                
+
             if (!isValid)
             {
-                return BadRequest(new AuthResponse { Success = false, Message = "Invalid verification code" });
+                return Unauthorized(new AuthResponse
+                {
+                    Success = false,
+                    Message = "Invalid two-factor code"
+                });
             }
-            
-            // Create claims and generate token
+
+            // Generate the final token
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
-            
-            // Check if this user is an admin
+
             if (user.MoviesUserId.HasValue)
             {
-                var moviesUser = await _context.MoviesUsers.FindAsync(user.MoviesUserId);
-                if (moviesUser != null && moviesUser.Admin == 1)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, "Administrator"));
-                }
-                
                 authClaims.Add(new Claim("MoviesUserId", user.MoviesUserId.Value.ToString()));
             }
-            
+
             var token = GetToken(authClaims);
-            
+
             // Set auth cookie
             var cookieOptions = new CookieOptions
             {
@@ -592,7 +593,7 @@ public class AuthController : ControllerBase
             {
                 Response.Cookies.Append("moviesUserId", user.MoviesUserId.Value.ToString(), cookieOptions);
             }
-            
+
             return Ok(new AuthResponse
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -603,8 +604,12 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error verifying two-factor code");
-            return StatusCode(500, new AuthResponse { Success = false, Message = "Error verifying two-factor code" });
+            _logger.LogError(ex, "Error during two-factor verification");
+            return StatusCode(500, new AuthResponse
+            {
+                Success = false,
+                Message = "An error occurred during two-factor verification"
+            });
         }
     }
     
