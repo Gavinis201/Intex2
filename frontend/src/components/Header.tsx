@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
@@ -12,7 +12,15 @@ function Header() {
   const location = useLocation();
   const [authenticated, setAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchInput, setSearchInput] = useState('');
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      navigate(`/moviepage?title=${encodeURIComponent(searchInput.trim())}`);
+    }
+  };
   // Debug: check current path
   console.log("Current path:", location.pathname);
 
@@ -55,18 +63,21 @@ function Header() {
         </h1>
       </Link>
       <div className="d-flex flex-row custom-gap">
+        
       {/* Search bar only on /moviepage */}
       {showSearchBar && (
-        <div className="">
-          <FontAwesomeIcon icon={faSearch} style={{ color: 'white', fontSize: '1.2rem', marginRight: '10px' }} />
-          <input
-            type="text"
-            className="movieSearch"
-            placeholder="Movie Titles..."
-            
-          />
-        </div>
-      )}
+    <form onSubmit={handleSearch}>
+      <FontAwesomeIcon icon={faSearch} style={{ color: 'white', fontSize: '1.2rem', marginRight: '10px' }} />
+      <input
+        type="text"
+        className="movieSearch"
+        placeholder="Movie Titles..."
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+      />
+    </form>
+)}
+
 
       {/* Auth button */}
       <div className="d-flex align-items-center gap-3">

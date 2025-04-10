@@ -11,3 +11,5 @@ public partial class MoviesRating
 
     public int? Rating { get; set; }
 }
+
+
