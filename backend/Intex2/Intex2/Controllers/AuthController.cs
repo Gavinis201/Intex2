@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Logging;
 
 namespace Intex2.Controllers;
 
@@ -24,17 +25,20 @@ public class AuthController : ControllerBase
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IConfiguration _configuration;
     private readonly MoviesDBContext _context;
+    private readonly ILogger<AuthController> _logger;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         IConfiguration configuration,
-        MoviesDBContext context)
+        MoviesDBContext context,
+        ILogger<AuthController> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _configuration = configuration;
         _context = context;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -275,6 +279,138 @@ public class AuthController : ControllerBase
             Console.WriteLine($"Exception creating test user: {ex.Message}");
             return StatusCode(500, $"Exception: {ex.Message}");
         }
+    }
+
+    [HttpPost]
+    [Route("refresh-token")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel model)
+    {
+        try
+        {
+            var principal = GetPrincipalFromExpiredToken(model.Token);
+            if (principal == null)
+            {
+                return BadRequest(new AuthResponse { Success = false, Message = "Invalid token" });
+            }
+
+            var username = principal.Identity.Name;
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null || user.RefreshToken != model.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                return BadRequest(new AuthResponse { Success = false, Message = "Invalid refresh token" });
+            }
+
+            var newToken = GetToken(principal.Claims.ToList());
+            var newRefreshToken = GenerateRefreshToken();
+            
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            await _userManager.UpdateAsync(user);
+
+            return Ok(new AuthResponse
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(newToken),
+                RefreshToken = newRefreshToken,
+                Expiration = newToken.ValidTo,
+                Success = true,
+                Message = "Token refreshed successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error refreshing token");
+            return StatusCode(500, new AuthResponse { Success = false, Message = "Error refreshing token" });
+        }
+    }
+
+    [HttpPost]
+    [Route("reset-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return BadRequest(new AuthResponse { Success = false, Message = "User not found" });
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new AuthResponse 
+                { 
+                    Success = false, 
+                    Message = string.Join(", ", result.Errors.Select(e => e.Description))
+                });
+            }
+
+            return Ok(new AuthResponse { Success = true, Message = "Password reset successfully" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error resetting password");
+            return StatusCode(500, new AuthResponse { Success = false, Message = "Error resetting password" });
+        }
+    }
+
+    [HttpPost]
+    [Route("forgot-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return BadRequest(new AuthResponse { Success = false, Message = "User not found" });
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            // In a real application, you would send this token via email
+            // For now, we'll just return it
+            return Ok(new { Token = token });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating password reset token");
+            return StatusCode(500, new AuthResponse { Success = false, Message = "Error generating password reset token" });
+        }
+    }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+    }
+
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+            ValidateLifetime = false
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        SecurityToken securityToken;
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+        var jwtSecurityToken = securityToken as JwtSecurityToken;
+        if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            throw new SecurityTokenException("Invalid token");
+
+        return principal;
     }
 
     private JwtSecurityToken GetToken(List<Claim> authClaims)

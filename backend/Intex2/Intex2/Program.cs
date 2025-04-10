@@ -25,6 +25,15 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     
     // Configure user settings
     options.User.RequireUniqueEmail = true;
+    
+    // Configure lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+    
+    // Configure sign-in settings
+    options.SignIn.RequireConfirmedEmail = false; // Set to true if you want to require email confirmation
+    options.SignIn.RequireConfirmedAccount = false;
 })
 .AddEntityFrameworkStores<MoviesDBContext>()
 .AddDefaultTokenProviders();
@@ -46,8 +55,16 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration["JWT:ValidAudience"],
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+        ClockSkew = TimeSpan.Zero // Remove delay of token when expire
     };
+});
+
+// Add authorization policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User"));
 });
 
 builder.Services.AddEndpointsApiExplorer();
