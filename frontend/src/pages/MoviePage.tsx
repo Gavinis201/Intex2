@@ -87,14 +87,31 @@ function MoviePage() {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 6,
     slidesToScroll: 2,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 1200,
         settings: {
           slidesToShow: 4,
           slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
         },
       },
       {
@@ -160,7 +177,7 @@ function MoviePage() {
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
-    e.currentTarget.src = comingSoon;
+    e.currentTarget.src ;
   };
 
   const handleScroll = useCallback(() => {
@@ -358,15 +375,15 @@ function MoviePage() {
                     onClick={() => handleMovieClick(movie)}
                   >
                     <img
-                      src={movie.movie_poster || comingSoon}
+                      src={movie.movie_poster}
                       alt={movie.title}
                       className="movie-poster"
                       onError={handleImageError}
                     />
-                  </div>
-                </div>
-              ))}
-            </Slider>
+              </div>
+            </div>
+          ))}
+        </Slider>
           </div>
 
           <div className="all-movies-section">
@@ -379,7 +396,7 @@ function MoviePage() {
                   onClick={() => handleMovieClick(movie)}
                 >
                   <img
-                    src={movie.movie_poster || comingSoon}
+                    src={movie.movie_poster}
                     alt={movie.title}
                     className="movie-poster"
                     onError={handleImageError}
@@ -405,7 +422,7 @@ function MoviePage() {
             </div>
             <div className="movie-modal-body">
               <img
-                src={selectedMovie.movie_poster || comingSoon}
+                src={selectedMovie.movie_poster}
                 alt={selectedMovie.title}
                 className="movie-modal-poster"
                 onError={handleImageError}
@@ -489,7 +506,7 @@ function MoviePage() {
                         }}
                       >
                         <img
-                          src={recommendation.movie_poster || comingSoon}
+                          src={recommendation.movie_poster }
                           alt={recommendation.title}
                           onError={handleImageError}
                         />
