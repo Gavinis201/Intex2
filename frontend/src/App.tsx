@@ -13,7 +13,6 @@ import MoviePage from "./pages/MoviePage";
 import ThankYouPage from "./components/ThankYouPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RecommendationsPage from "./pages/Recommendations";
-import Recommendations from "./pages/Recommendations";
 
 // Component to handle layout based on route
 const AppLayout = () => {
