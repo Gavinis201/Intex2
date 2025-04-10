@@ -1,0 +1,209 @@
+# .NET Core build folders
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio files
+.vs/
+.vs/**/FileContentIndex/
+*.vsidx
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.cache
+*.userprefs
+*.DotSettings.user
+*.sln.iml
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Rider
+.idea/
+*.sln.iml
+
+# SQLite files
+*.sqlite
+*.sqlite3
+*.db
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Logs
+*.log
+*.tlog
+
+# Compiled binaries and debug symbols
+*.dll
+*.exe
+*.pdb
+*.dll.config
+*.cache
+*.config
+
+# NuGet
+*.nupkg
+packages/
+*.nuget.props
+*.nuget.targets
+*.nuget.dgspec.json
+*.nuget.g.props
+*.nuget.g.targets
+project.assets.json
+project.nuget.cache
+
+# Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Local History for Visual Studio
+.localhistory/
+
+# Visual Studio 2015 cache/options directory
+.vs/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# DNX
+project.lock.json
+artifacts/
+
+# Visual Studio 2015
+.vs/
+
+# Visual Studio 2017
+.vs/
+
+# Visual Studio 2019
+.vs/
+
+# Visual Studio 2022
+.vs/
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio for Mac
+*.userprefs
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
+# Visual Studio 2017 auto generated files
+Generated\ Files/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# DNX
+project.lock.json
+artifacts/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
+# Visual Studio 2017 auto generated files
+Generated\ Files/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# DNX
+project.lock.json
+artifacts/
