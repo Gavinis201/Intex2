@@ -130,7 +130,7 @@ namespace Intex2.Controllers
 
         // POST: /MoviesTitle/AddMovie
         [HttpPost("AddMovie")]
-        // [Authorize(Roles = "admin")] // Require authentication for adding movies
+        [Authorize(Roles = "Administrator")] // Require authentication for adding movies
         public async Task<ActionResult<MoviesTitle>> AddMovie(MoviesTitle movie)
         {
             _context.MoviesTitles.Add(movie);
@@ -141,7 +141,7 @@ namespace Intex2.Controllers
 
         // PUT: /MoviesTitle/UpdateMovie/{id}
         [HttpPut("UpdateMovie/{id}")]
-        // [Authorize(Roles = "admin")] // Require authentication for updating movies
+        [Authorize(Roles = "Administrator")] // Require authentication for updating movies
         public async Task<IActionResult> UpdateMovie(string id, MoviesTitle updatedMovie)
         {
             if (id != updatedMovie.ShowId)
@@ -170,7 +170,7 @@ namespace Intex2.Controllers
 
         // DELETE: /MoviesTitle/DeleteMovie/{id}
         [HttpDelete("DeleteMovie/{id}")]
-        // [Authorize(Roles = "admin")] // Require authentication for deleting movies
+        [Authorize(Roles = "Administrator")] // Require authentication for deleting movies
         public async Task<IActionResult> DeleteMovie(string id)
         {
             var movie = await _context.MoviesTitles.FindAsync(id);

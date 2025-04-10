@@ -11,14 +11,25 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
+// Helper function to check cookie consent
+const hasCookieConsent = (): boolean => {
+  return localStorage.getItem('cookieConsent') === 'accepted';
+};
+
 // Configure axios to ignore SSL certificate validation in development
 // axios.defaults.httpsAgent = new (require('https').Agent)({ rejectUnauthorized: false });
 
 // Add a request interceptor to add the auth token to all requests
 axios.interceptors.request.use(
   (config) => {
-    // Try to get token from cookie first, then localStorage as fallback
-    const token = getCookie('authToken') || localStorage.getItem('authToken');
+    // Only use cookies if the user has given consent, otherwise use localStorage
+    const useLocalStorageOnly = !hasCookieConsent();
+    
+    // Try to get token from appropriate storage
+    const token = useLocalStorageOnly 
+      ? localStorage.getItem('authToken') 
+      : (getCookie('authToken') || localStorage.getItem('authToken'));
+      
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -34,8 +45,45 @@ export const login = async (email: string, password: string) => {
     console.log('Login API response:', response.data);
     
     if (response.data.token) {
+      // Always store in localStorage for fallback
       localStorage.setItem('authToken', response.data.token);
       localStorage.setItem('userEmail', email);
+      
+      // Extract userId and moviesUserId from token payload
+      let userId = null;
+      let moviesUserId = null;
+      
+      try {
+        const tokenPayload = JSON.parse(atob(response.data.token.split('.')[1]));
+        userId = tokenPayload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+        moviesUserId = tokenPayload['MoviesUserId'];
+        
+        if (userId) {
+          localStorage.setItem('userId', userId);
+        }
+        if (moviesUserId) {
+          localStorage.setItem('moviesUserId', moviesUserId);
+        }
+      } catch (e) {
+        console.error('Failed to parse token:', e);
+      }
+      
+      // If user has already consented to cookies, set them immediately
+      if (hasCookieConsent()) {
+        const expires = new Date(response.data.expiration).toUTCString();
+        document.cookie = `authToken=${response.data.token}; expires=${expires}; path=/; secure; samesite=strict`;
+        document.cookie = `userEmail=${email}; expires=${expires}; path=/; secure; samesite=strict`;
+        
+        if (userId) {
+          document.cookie = `userId=${userId}; expires=${expires}; path=/; secure; samesite=strict`;
+        }
+        
+        if (moviesUserId) {
+          document.cookie = `moviesUserId=${moviesUserId}; expires=${expires}; path=/; secure; samesite=strict`;
+        }
+        
+        console.log('Set auth cookies after login with consent');
+      }
     }
     return response.data;
   } catch (error: any) {
@@ -58,10 +106,16 @@ export const logout = () => {
   // Clear localStorage
   localStorage.removeItem('authToken');
   localStorage.removeItem('userEmail');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('moviesUserId');
   
-  // Clear cookies
-  document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  document.cookie = 'userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  // Clear cookies if we have consent to use them
+  if (hasCookieConsent()) {
+    document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'moviesUserId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  }
 };
 
 export const register = async (userData: any, authData: any) => {
@@ -79,8 +133,45 @@ export const register = async (userData: any, authData: any) => {
     // Then register with auth system
     const response = await axios.post(API_URL + 'register', authData);
     if (response.data.token) {
+      // Always store in localStorage for fallback
       localStorage.setItem('authToken', response.data.token);
       localStorage.setItem('userEmail', authData.email);
+      
+      // Extract userId and moviesUserId from token payload
+      let userId = null;
+      let moviesUserId = null;
+      
+      try {
+        const tokenPayload = JSON.parse(atob(response.data.token.split('.')[1]));
+        userId = tokenPayload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+        moviesUserId = tokenPayload['MoviesUserId'];
+        
+        if (userId) {
+          localStorage.setItem('userId', userId);
+        }
+        if (moviesUserId) {
+          localStorage.setItem('moviesUserId', moviesUserId);
+        }
+      } catch (e) {
+        console.error('Failed to parse token:', e);
+      }
+      
+      // If user has already consented to cookies, set them immediately
+      if (hasCookieConsent()) {
+        const expires = new Date(response.data.expiration).toUTCString();
+        document.cookie = `authToken=${response.data.token}; expires=${expires}; path=/; secure; samesite=strict`;
+        document.cookie = `userEmail=${authData.email}; expires=${expires}; path=/; secure; samesite=strict`;
+        
+        if (userId) {
+          document.cookie = `userId=${userId}; expires=${expires}; path=/; secure; samesite=strict`;
+        }
+        
+        if (moviesUserId) {
+          document.cookie = `moviesUserId=${moviesUserId}; expires=${expires}; path=/; secure; samesite=strict`;
+        }
+        
+        console.log('Set auth cookies after registration with consent');
+      }
     }
     return response.data;
   } catch (error) {
@@ -89,16 +180,71 @@ export const register = async (userData: any, authData: any) => {
 };
 
 export const isAuthenticated = () => {
-  // Check both cookie and localStorage
-  return getCookie('authToken') !== null || localStorage.getItem('authToken') !== null;
+  // Check both cookie and localStorage based on consent settings
+  if (hasCookieConsent()) {
+    return getCookie('authToken') !== null || localStorage.getItem('authToken') !== null;
+  } else {
+    // If no cookie consent, only check localStorage
+    return localStorage.getItem('authToken') !== null;
+  }
 };
 
 export const getCurrentUser = () => {
-  // Try cookie first, then localStorage
-  return getCookie('userEmail') || localStorage.getItem('userEmail');
+  // Try appropriate storage based on consent
+  if (hasCookieConsent()) {
+    return getCookie('userEmail') || localStorage.getItem('userEmail');
+  } else {
+    return localStorage.getItem('userEmail');
+  }
 };
 
 export const getAuthToken = () => {
-  // Try cookie first, then localStorage
-  return getCookie('authToken') || localStorage.getItem('authToken');
+  // Try appropriate storage based on consent
+  if (hasCookieConsent()) {
+    return getCookie('authToken') || localStorage.getItem('authToken');
+  } else {
+    return localStorage.getItem('authToken');
+  }
+};
+
+export const getUserId = () => {
+  // Try appropriate storage based on consent
+  if (hasCookieConsent()) {
+    return getCookie('userId') || localStorage.getItem('userId');
+  } else {
+    return localStorage.getItem('userId');
+  }
+};
+
+export const getMoviesUserId = () => {
+  // Try appropriate storage based on consent
+  if (hasCookieConsent()) {
+    return getCookie('moviesUserId') || localStorage.getItem('moviesUserId');
+  } else {
+    return localStorage.getItem('moviesUserId');
+  }
+};
+
+export const isAdmin = () => {
+  const token = getAuthToken();
+  if (!token) return false;
+  
+  try {
+    // Decode the JWT token
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(window.atob(base64));
+    
+    // Get the role claim value
+    const roleClaim = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+    // Check if the role claim exists and includes Administrator
+    return payload && 
+          (roleClaim === 'Administrator' ||
+           (Array.isArray(roleClaim) && roleClaim.includes('Administrator')) ||
+           (payload.roles && payload.roles.includes('Administrator')));
+  } catch (error) {
+    console.error('Error parsing JWT token:', error);
+    return false;
+  }
 }; 

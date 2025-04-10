@@ -32,21 +32,33 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
     if (!confirmAdd) return;
 
     try {
+      // Get the authentication token
+      const token = localStorage.getItem('authToken');
+      
+      if (!token) {
+        alert("You must be logged in to add movies.");
+        return;
+      }
+      
       const response = await fetch("https://localhost:5000/MoviesTitle/AddMovie", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error adding movie:", errorText);
         throw new Error("Failed to add movie");
       }
 
       onSuccess();
     } catch (error) {
-      alert("Error submitting movie. Try again.");
+      console.error("Add error:", error);
+      alert("Error adding movie. Make sure you have admin privileges.");
     }
   };
 

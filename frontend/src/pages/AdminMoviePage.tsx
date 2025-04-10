@@ -21,8 +21,13 @@ const AdminMoviePage = () => {
 
   const fetchMovies = async () => {
     try {
+      const token = localStorage.getItem('authToken');
+      
       const response = await fetch(
-        `https://localhost:5000/MoviesTitle/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}&search=${encodeURIComponent(searchTerm)}`
+        `https://localhost:5000/MoviesTitle/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}&search=${encodeURIComponent(searchTerm)}`,
+        {
+          headers: token ? { "Authorization": `Bearer ${token}` } : {}
+        }
       );
       if (!response.ok) throw new Error("Failed to fetch movies");
 
@@ -51,12 +56,31 @@ const AdminMoviePage = () => {
     if (!confirmDelete) return;
 
     try {
-      await fetch(`https://localhost:5000/MoviesTitle/DeleteMovie/${showId}`, {
+      // Get the authentication token
+      const token = localStorage.getItem('authToken');
+      
+      if (!token) {
+        alert("You must be logged in to delete movies.");
+        return;
+      }
+
+      const response = await fetch(`https://localhost:5000/MoviesTitle/DeleteMovie/${showId}`, {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error deleting movie:", errorText);
+        throw new Error("Failed to delete movie");
+      }
+
       setMovies(movies.filter((m) => m.showId !== showId));
     } catch (error) {
-      alert("Failed to delete movie.");
+      console.error("Delete error:", error);
+      alert("Failed to delete movie. Make sure you have admin privileges.");
     }
   };
 

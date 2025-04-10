@@ -10,6 +10,7 @@ import fallen from '../assets/images/Top10/Fallen.jpg';
 import daybreak from '../assets/images/Top10/Daybreak.jpg';
 import blackway from '../assets/images/Top10/Blackway.jpg';
 import badBlood from '../assets/images/Top10/Bad Blood.jpg';
+import { isAdmin } from '../services/authService';
 
 const HomeComp = () => {
   const topMovies = [
@@ -25,6 +26,9 @@ const HomeComp = () => {
     { img: badBlood, title: 'Bad Blood' }
   ];
 
+  // Check if user is admin
+  const userIsAdmin = isAdmin();
+
   return (
     <>
     <div className="backgroundPicHomePage">
@@ -35,6 +39,24 @@ const HomeComp = () => {
         <Link to="/CreateAccount">
           <button className="create-account-btn">Create an Account</button>
         </Link>
+        
+        {userIsAdmin && (
+          <div className="admin-button-container" style={{ marginTop: '20px' }}>
+            <Link to="/AdminMovies">
+              <button className="admin-button" style={{ 
+                backgroundColor: '#e50914', 
+                color: 'white', 
+                padding: '10px 20px', 
+                border: 'none', 
+                borderRadius: '5px', 
+                fontWeight: 'bold',
+                cursor: 'pointer' 
+              }}>
+                Admin Dashboard
+              </button>
+            </Link>
+          </div>
+        )}
       </div>
       <div className="homeContent trending-section">
         <h3>Trending Now</h3>

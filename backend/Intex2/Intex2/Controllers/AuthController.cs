@@ -81,6 +81,32 @@ public class AuthController : ControllerBase
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
+            // Check if this user is the admin (Stephen Peters)
+            if (user.MoviesUserId.HasValue)
+            {
+                var moviesUser = await _context.MoviesUsers.FindAsync(user.MoviesUserId);
+                if (moviesUser != null && moviesUser.Admin == 1)
+                {
+                    // Add admin role to claims
+                    authClaims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+                    Console.WriteLine($"Added Administrator role to user: {user.Email}");
+                    
+                    // Also ensure user is in the admin role in the database
+                    if (!await _userManager.IsInRoleAsync(user, "Administrator"))
+                    {
+                        await _userManager.AddToRoleAsync(user, "Administrator");
+                        Console.WriteLine($"Added user {user.Email} to Administrator role in database");
+                    }
+                }
+            }
+
+            // Add the user ID to claims
+            authClaims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            if (user.MoviesUserId.HasValue)
+            {
+                authClaims.Add(new Claim("MoviesUserId", user.MoviesUserId.Value.ToString()));
+            }
+
             var token = GetToken(authClaims);
             Console.WriteLine($"Token generated for user: {user.Email}, expires: {token.ValidTo}");
             
@@ -94,6 +120,11 @@ public class AuthController : ControllerBase
             };
             Response.Cookies.Append("authToken", new JwtSecurityTokenHandler().WriteToken(token), cookieOptions);
             Response.Cookies.Append("userEmail", user.Email, cookieOptions);
+            Response.Cookies.Append("userId", user.Id, cookieOptions);
+            if (user.MoviesUserId.HasValue)
+            {
+                Response.Cookies.Append("moviesUserId", user.MoviesUserId.Value.ToString(), cookieOptions);
+            }
             
             Console.WriteLine("Set authentication cookies");
 
@@ -182,7 +213,13 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.Id)
         };
+        
+        if (user.MoviesUserId.HasValue)
+        {
+            authClaims.Add(new Claim("MoviesUserId", user.MoviesUserId.Value.ToString()));
+        }
 
         var token = GetToken(authClaims);
         
@@ -196,6 +233,11 @@ public class AuthController : ControllerBase
         };
         Response.Cookies.Append("authToken", new JwtSecurityTokenHandler().WriteToken(token), cookieOptions);
         Response.Cookies.Append("userEmail", user.Email, cookieOptions);
+        Response.Cookies.Append("userId", user.Id, cookieOptions);
+        if (user.MoviesUserId.HasValue)
+        {
+            Response.Cookies.Append("moviesUserId", user.MoviesUserId.Value.ToString(), cookieOptions);
+        }
 
         return Ok(new AuthResponse
         {

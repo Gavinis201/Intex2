@@ -40,4 +40,6 @@ public partial class MoviesUser
     public string? State { get; set; }
 
     public int? Zip { get; set; }
+    
+    public int? Admin { get; set; }
 }

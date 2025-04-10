@@ -36,12 +36,21 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
     console.log("Payload:", fullPayload);
   
     try {
+      // Get the authentication token
+      const token = localStorage.getItem('authToken');
+      
+      if (!token) {
+        alert("You must be logged in to edit movies.");
+        return;
+      }
+      
       const response = await fetch(
         `https://localhost:5000/MoviesTitle/UpdateMovie/${movie.showId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(fullPayload),
         }
@@ -58,7 +67,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
       onSuccess();
     } catch (error) {
       console.error("Error caught:", error);
-      alert("Error updating movie. Please try again.");
+      alert("Error updating movie. Make sure you have admin privileges.");
     }
   };
   

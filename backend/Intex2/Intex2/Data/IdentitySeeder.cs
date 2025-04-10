@@ -13,16 +13,16 @@ namespace Intex2.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            if (!await roleManager.RoleExistsAsync("admin"))
+            if (!await roleManager.RoleExistsAsync("Administrator"))
             {
-                await roleManager.CreateAsync(new IdentityRole("admin"));
+                await roleManager.CreateAsync(new IdentityRole("Administrator"));
             }
 
             var adminUser = await userManager.FindByEmailAsync("admin@email.com");
 
-            if (adminUser != null && !(await userManager.IsInRoleAsync(adminUser, "admin")))
+            if (adminUser != null && !(await userManager.IsInRoleAsync(adminUser, "Administrator")))
             {
-                await userManager.AddToRoleAsync(adminUser, "admin");
+                await userManager.AddToRoleAsync(adminUser, "Administrator");
             }
         }
     }
