@@ -22,13 +22,13 @@ function Header() {
   useEffect(() => {
     setAuthenticated(isAuthenticated());
     setUserEmail(getCurrentUser() || '');
-  }, []);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
     setAuthenticated(false);
     setUserEmail('');
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -42,18 +42,37 @@ function Header() {
       }}
     >
       {/* Logo */}
-      <Link to="/" className="d-flex align-items-center text-decoration-none">
-        <h1 
-          className="mb-0 fs-1 fw-bold"
-          style={{
-            color: '#8A2BE2',
-            fontFamily: 'Poppins, sans-serif',
-            letterSpacing: '-0.5px'
-          }}
-        >
-          CineNiche
-        </h1>
-      </Link>
+      <div className="d-flex align-items-center gap-4">
+        <Link to="/" className="d-flex align-items-center text-decoration-none">
+          <h1 
+            className="mb-0 fs-1 fw-bold"
+            style={{
+              color: '#8A2BE2',
+              fontFamily: 'Poppins, sans-serif',
+              letterSpacing: '-0.5px'
+            }}
+          >
+            CineNiche
+          </h1>
+        </Link>
+        {authenticated && (
+          <button
+            className="btn btn-primary btn-md"
+            style={{
+              backgroundColor: '#8A2BE2',
+              border: 'none',
+              fontFamily: 'Montserrat, sans-serif',
+              transition: 'all 0.2s ease',
+              padding: '0.5rem 1.25rem',
+            }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#9D3BE3'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A2BE2'}
+            onClick={() => navigate('/MoviePage')}
+          >
+            Movies
+          </button>
+        )}
+      </div>
       <div className="d-flex flex-row custom-gap">
       {/* Search bar only on /moviepage */}
       {showSearchBar && (
@@ -70,6 +89,11 @@ function Header() {
 
       {/* Auth button */}
       <div className="d-flex align-items-center gap-3">
+        {authenticated && (
+          <span className="text-white me-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            Hello, {userEmail.split('@')[0]}
+          </span>
+        )}
         <button
           className="btn btn-primary btn-md"
           style={{
@@ -81,9 +105,9 @@ function Header() {
           }}
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#9D3BE3'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8A2BE2'}
-          onClick={handleLogout}
+          onClick={authenticated ? handleLogout : () => navigate('/login')}
         >
-          Sign out
+          {authenticated ? 'Sign Out' : 'Sign In'}
         </button>
       </div>
 </div>

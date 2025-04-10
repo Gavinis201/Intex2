@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import '../Matt.css';
 import { login } from '../services/authService';
 
+// Helper function to set a secure cookie
+const setCookie = (name: string, value: string, days: number) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;secure;samesite=strict`;
+};
+
 const LoginComp = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,8 +28,15 @@ const LoginComp = () => {
       console.log('Login response:', response);
       
       if (response.success) {
-        // Redirect to home page
-        navigate('/');
+        // Set auth cookie (7 days expiry)
+        if (response.token) {
+          setCookie('authToken', response.token, 7);
+          setCookie('userEmail', email, 7);
+        }
+        
+        // Redirect to the page the user was trying to access, or MoviePage by default
+        const from = location.state?.from?.pathname || '/MoviePage';
+        navigate(from, { replace: true });
       } else {
         setError(response.message || 'Login failed');
       }

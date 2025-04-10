@@ -40,36 +40,22 @@ const Footer = () => {
           </div>
 
           {/* Middle - Quick Links */}
-          <div className="col-md-4">
-            <h6 className="fw-bold mb-2">Quick Links</h6>
-            <ul className="list-unstyled small mb-0">
-              <li>
-                <Link to="/FAQ" className="text-white text-decoration-none hover-purple">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link to="/Privacy" className="text-white text-decoration-none hover-purple">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/Contact" className="text-white text-decoration-none hover-purple">
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
+          <div className="col-md-4 d-flex flex-column align-items-center">
+            <h6 className="fw-bold mb-3 text-uppercase">Quick Links</h6>
+            <div className="d-flex justify-content-center gap-5">
+              <Link to="/FAQ" className="text-white text-decoration-none hover-purple px-2">
+                FAQ
+              </Link>
+              <Link to="/Privacy" className="text-white text-decoration-none hover-purple px-2">
+                Privacy Policy
+              </Link>
+              <Link to="/Contact" className="text-white text-decoration-none hover-purple px-2">
+                Contact Us
+              </Link>
+            </div>
           </div>
 
           {/* Right - Contact Info */}
-          <div className="col-md-4">
-            <h6 className="fw-bold mb-2">Contact Us</h6>
-            <ul className="list-unstyled small mb-0">
-              <li>Email: contact@cn.com</li>
-              <li>Phone: (555) 123-4567</li>
-              <li>Address: 123 Innovation Street</li>
-            </ul>
-          </div>
         </div>
         
         {/* Copyright */}
