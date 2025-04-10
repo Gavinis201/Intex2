@@ -9,6 +9,6 @@ public class ApplicationUser : IdentityUser
     public virtual MoviesUser MoviesUser { get; set; }
     
     // Refresh token fields
-    public string RefreshToken { get; set; }
-    public DateTime RefreshTokenExpiryTime { get; set; }
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 } 
