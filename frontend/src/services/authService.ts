@@ -44,6 +44,15 @@ export const login = async (email: string, password: string) => {
     const response = await axios.post(API_URL + 'login', { email, password });
     console.log('Login API response:', response.data);
     
+    // Check if two-factor authentication is required
+    if (response.data.requiresTwoFactor) {
+      console.log('Two-factor authentication required');
+      return {
+        ...response.data,
+        email // Store the email for the 2FA step
+      };
+    }
+    
     if (response.data.token) {
       // Always store in localStorage for fallback
       localStorage.setItem('authToken', response.data.token);
@@ -98,6 +107,90 @@ export const login = async (email: string, password: string) => {
     if (error.response?.status === 500) {
       throw new Error('Server error occurred. The server might be misconfigured or the database might not be properly set up.');
     }
+    throw error;
+  }
+};
+
+export const verifyTwoFactorCode = async (email: string, code: string, rememberDevice: boolean = false) => {
+  try {
+    console.log(`Verifying two-factor code for ${email}`);
+    const response = await axios.post(API_URL + 'two-factor-verify', { email, code, rememberDevice });
+    console.log('Two-factor verification response:', response.data);
+    
+    if (response.data.token) {
+      // Always store in localStorage for fallback
+      localStorage.setItem('authToken', response.data.token);
+      localStorage.setItem('userEmail', email);
+      
+      // Extract userId and moviesUserId from token payload
+      let userId = null;
+      let moviesUserId = null;
+      
+      try {
+        const tokenPayload = JSON.parse(atob(response.data.token.split('.')[1]));
+        userId = tokenPayload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+        moviesUserId = tokenPayload['MoviesUserId'];
+        
+        if (userId) {
+          localStorage.setItem('userId', userId);
+        }
+        if (moviesUserId) {
+          localStorage.setItem('moviesUserId', moviesUserId);
+        }
+      } catch (e) {
+        console.error('Failed to parse token:', e);
+      }
+      
+      // If user has already consented to cookies, set them immediately
+      if (hasCookieConsent()) {
+        const expires = new Date(response.data.expiration).toUTCString();
+        document.cookie = `authToken=${response.data.token}; expires=${expires}; path=/; secure; samesite=strict`;
+        document.cookie = `userEmail=${email}; expires=${expires}; path=/; secure; samesite=strict`;
+        
+        if (userId) {
+          document.cookie = `userId=${userId}; expires=${expires}; path=/; secure; samesite=strict`;
+        }
+        
+        if (moviesUserId) {
+          document.cookie = `moviesUserId=${moviesUserId}; expires=${expires}; path=/; secure; samesite=strict`;
+        }
+      }
+    }
+    
+    return response.data;
+  } catch (error: any) {
+    console.error('Two-factor verification error:', error);
+    throw error;
+  }
+};
+
+export const setupTwoFactor = async () => {
+  try {
+    const response = await axios.post(API_URL + 'two-factor-setup');
+    return response.data;
+  } catch (error) {
+    console.error('Error setting up two-factor authentication:', error);
+    throw error;
+  }
+};
+
+export const verifyAuthenticator = async (code: string) => {
+  try {
+    const email = getCurrentUser();
+    const response = await axios.post(API_URL + 'verify-authenticator', { code, email });
+    return response.data;
+  } catch (error) {
+    console.error('Error verifying authenticator code:', error);
+    throw error;
+  }
+};
+
+export const disableTwoFactor = async () => {
+  try {
+    const response = await axios.post(API_URL + 'disable-two-factor');
+    return response.data;
+  } catch (error) {
+    console.error('Error disabling two-factor authentication:', error);
     throw error;
   }
 };

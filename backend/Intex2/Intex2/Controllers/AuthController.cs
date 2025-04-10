@@ -14,6 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Logging;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text.Encodings.Web;
 
 namespace Intex2.Controllers;
 
@@ -71,6 +74,25 @@ public class AuthController : ControllerBase
                     Success = false,
                     Message = "Invalid email or password"
                 });
+            }
+            
+            // Check if two-factor authentication is enabled for this user
+            if (await _userManager.GetTwoFactorEnabledAsync(user))
+            {
+                Console.WriteLine($"Two-factor authentication is enabled for user: {user.Email}");
+                
+                // Generate and send the token (in a real app, you'd send via SMS or email)
+                var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
+                if (providers.Contains("Authenticator"))
+                {
+                    // User needs to use their authenticator app
+                    return Ok(new AuthResponse
+                    {
+                        Success = true,
+                        RequiresTwoFactor = true,
+                        Message = "Requires two-factor authentication"
+                    });
+                }
             }
 
             Console.WriteLine($"Password check succeeded for user: {user.Email}, generating token");
@@ -421,6 +443,205 @@ public class AuthController : ControllerBase
         {
             _logger.LogError(ex, "Error generating password reset token");
             return StatusCode(500, new AuthResponse { Success = false, Message = "Error generating password reset token" });
+        }
+    }
+
+    [HttpPost]
+    [Route("two-factor-setup")]
+    [Authorize]
+    public async Task<IActionResult> SetupTwoFactor()
+    {
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found" });
+            }
+            
+            // Generate the QR Code URI
+            string authenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            if (string.IsNullOrEmpty(authenticatorKey))
+            {
+                await _userManager.ResetAuthenticatorKeyAsync(user);
+                authenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            }
+            
+            string email = await _userManager.GetEmailAsync(user);
+            string appName = "Intex2MovieApp";
+            
+            // Format the QR code URL for the authenticator app
+            string authenticatorUri = $"otpauth://totp/{WebUtility.UrlEncode(appName)}:{WebUtility.UrlEncode(email)}?secret={authenticatorKey}&issuer={WebUtility.UrlEncode(appName)}&digits=6";
+            
+            // Generate recovery codes
+            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+            
+            return Ok(new TwoFactorSetupModel
+            {
+                SharedKey = authenticatorKey,
+                AuthenticatorUri = authenticatorUri,
+                RecoveryCodes = recoveryCodes?.ToArray(),
+                Success = true,
+                Message = "Two-factor authentication setup is ready"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error setting up two-factor authentication");
+            return StatusCode(500, new { Message = "Error setting up two-factor authentication", Error = ex.Message });
+        }
+    }
+    
+    [HttpPost]
+    [Route("verify-authenticator")]
+    [Authorize]
+    public async Task<IActionResult> VerifyAuthenticator([FromBody] TwoFactorVerifyModel model)
+    {
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { Success = false, Message = "User not found" });
+            }
+            
+            // Verify the code
+            bool isValid = await _userManager.VerifyTwoFactorTokenAsync(
+                user, 
+                _userManager.Options.Tokens.AuthenticatorTokenProvider, 
+                model.Code);
+                
+            if (!isValid)
+            {
+                return BadRequest(new { Success = false, Message = "Invalid verification code" });
+            }
+            
+            // Enable 2FA for the user
+            await _userManager.SetTwoFactorEnabledAsync(user, true);
+            
+            return Ok(new { Success = true, Message = "Two-factor authentication has been enabled" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error verifying authenticator code");
+            return StatusCode(500, new { Success = false, Message = "Error verifying authenticator code", Error = ex.Message });
+        }
+    }
+    
+    [HttpPost]
+    [Route("two-factor-verify")]
+    [AllowAnonymous]
+    public async Task<IActionResult> VerifyTwoFactorCode([FromBody] TwoFactorVerifyModel model)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound(new AuthResponse { Success = false, Message = "User not found" });
+            }
+            
+            // Verify the code
+            var isValid = await _userManager.VerifyTwoFactorTokenAsync(
+                user, 
+                _userManager.Options.Tokens.AuthenticatorTokenProvider, 
+                model.Code);
+                
+            if (!isValid)
+            {
+                return BadRequest(new AuthResponse { Success = false, Message = "Invalid verification code" });
+            }
+            
+            // Create claims and generate token
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+            };
+            
+            // Check if this user is an admin
+            if (user.MoviesUserId.HasValue)
+            {
+                var moviesUser = await _context.MoviesUsers.FindAsync(user.MoviesUserId);
+                if (moviesUser != null && moviesUser.Admin == 1)
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+                }
+                
+                authClaims.Add(new Claim("MoviesUserId", user.MoviesUserId.Value.ToString()));
+            }
+            
+            var token = GetToken(authClaims);
+            
+            // Set auth cookie
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = token.ValidTo
+            };
+            Response.Cookies.Append("authToken", new JwtSecurityTokenHandler().WriteToken(token), cookieOptions);
+            Response.Cookies.Append("userEmail", user.Email, cookieOptions);
+            Response.Cookies.Append("userId", user.Id, cookieOptions);
+            if (user.MoviesUserId.HasValue)
+            {
+                Response.Cookies.Append("moviesUserId", user.MoviesUserId.Value.ToString(), cookieOptions);
+            }
+            
+            return Ok(new AuthResponse
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo,
+                Success = true,
+                Message = "Two-factor authentication successful"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error verifying two-factor code");
+            return StatusCode(500, new AuthResponse { Success = false, Message = "Error verifying two-factor code" });
+        }
+    }
+    
+    [HttpPost]
+    [Route("disable-two-factor")]
+    [Authorize]
+    public async Task<IActionResult> DisableTwoFactor()
+    {
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { Success = false, Message = "User not found" });
+            }
+            
+            // Disable 2FA
+            var result = await _userManager.SetTwoFactorEnabledAsync(user, false);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { 
+                    Success = false, 
+                    Message = "Failed to disable two-factor authentication",
+                    Errors = result.Errors.Select(e => e.Description)
+                });
+            }
+            
+            // Reset the authenticator key
+            await _userManager.ResetAuthenticatorKeyAsync(user);
+            
+            return Ok(new { Success = true, Message = "Two-factor authentication has been disabled" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error disabling two-factor authentication");
+            return StatusCode(500, new { Success = false, Message = "Error disabling two-factor authentication", Error = ex.Message });
         }
     }
 

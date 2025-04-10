@@ -37,6 +37,7 @@ public class AuthResponse
     public DateTime Expiration { get; set; }
     public bool Success { get; set; }
     public string Message { get; set; }
+    public bool RequiresTwoFactor { get; set; }
 }
 
 public class RefreshTokenModel
@@ -72,4 +73,25 @@ public class ForgotPasswordModel
     [Required]
     [EmailAddress]
     public string Email { get; set; }
+}
+
+public class TwoFactorVerifyModel
+{
+    [Required(ErrorMessage = "Verification code is required")]
+    [StringLength(6, MinimumLength = 6, ErrorMessage = "Code must be 6 digits")]
+    public string Code { get; set; }
+    
+    [Required]
+    public string Email { get; set; }
+    
+    public bool RememberDevice { get; set; }
+}
+
+public class TwoFactorSetupModel
+{
+    public string SharedKey { get; set; }
+    public string AuthenticatorUri { get; set; }
+    public string[] RecoveryCodes { get; set; }
+    public bool Success { get; set; }
+    public string Message { get; set; }
 } 
