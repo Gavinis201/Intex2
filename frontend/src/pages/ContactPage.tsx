@@ -3,7 +3,7 @@ import ContactOutline from "../components/ContactOutline";
 function PrivacyPage() {
     return (
         <> 
-        <div className="">
+        <div className="backgroundPicHomePage">
         <ContactOutline />
         </div>
         </>

@@ -3,7 +3,7 @@ import CreateAccount from "../components/CreateAccount";
 function CreateAccountPage() {
     return (
         <> 
-        <div className="">
+        <div className="backgroundPicHomePage">
         <CreateAccount />
         </div>
         </>

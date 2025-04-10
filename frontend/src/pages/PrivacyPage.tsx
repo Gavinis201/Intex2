@@ -2,7 +2,7 @@ import PrivacyOutline from "../components/PrivacyOutline";
 function PrivacyPage() {
     return (
         <> 
-        <div className="">
+        <div className="backgroundPicHomePage">
         <PrivacyOutline />
         </div>
         </>

@@ -241,7 +241,7 @@ function CreateAccount() {
 
                     <button 
                         type="submit" 
-                        className="submit-button" 
+                        className="login-button"
                         disabled={isLoading}
                     >
                         {isLoading ? 'Creating Account...' : 'Create Account'}

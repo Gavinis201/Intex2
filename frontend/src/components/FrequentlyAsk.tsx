@@ -3,7 +3,7 @@ import '../App.css'
 function FrequentyAsk(){
 return(
     <>
-        <div className="background-color">
+        <div className="backgroundPicHomePage">
             <div className="blackOp">
                 <h1 className='privacy-color'>Frequently Asked Questions</h1>
                 <div className="privacy-start">
