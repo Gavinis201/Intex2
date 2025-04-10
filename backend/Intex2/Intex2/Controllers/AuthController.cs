@@ -680,9 +680,17 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var jwtSecret = _configuration["JWT:Secret"] ?? "JWTAuthenticationSecretKey123456789";
-            var issuer = _configuration["JWT:ValidIssuer"] ?? "http://localhost:5000";
-            var audience = _configuration["JWT:ValidAudience"] ?? "http://localhost:3000";
+            var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? 
+                _configuration["JWT:Secret"] ?? 
+                "JWTAuthenticationSecretKey123456789";
+                
+            var issuer = Environment.GetEnvironmentVariable("JWT_VALID_ISSUER") ?? 
+                _configuration["JWT:ValidIssuer"] ?? 
+                "http://localhost:5000";
+                
+            var audience = Environment.GetEnvironmentVariable("JWT_VALID_AUDIENCE") ?? 
+                _configuration["JWT:ValidAudience"] ?? 
+                "http://localhost:3000";
             
             Console.WriteLine($"JWT Secret: {(string.IsNullOrEmpty(jwtSecret) ? "NOT SET" : "SET")}");
             Console.WriteLine($"JWT Issuer: {issuer}");

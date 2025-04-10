@@ -5,13 +5,22 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Data.Sqlite;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load environment variables from .env file (if it exists)
+Env.Load();
+
 // Add services to the container
 builder.Services.AddControllers();
+
+// Get database connection from environment variable or fallback to configuration
+var connectionString = Environment.GetEnvironmentVariable("MOVIE_CONNECTION_STRING") ?? 
+    builder.Configuration.GetConnectionString("MovieConnection");
+
 builder.Services.AddDbContext<MoviesDBContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
+    options.UseSqlite(connectionString));
 
 // Add ASP.NET Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => 
@@ -38,6 +47,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<MoviesDBContext>()
 .AddDefaultTokenProviders();
 
+// Get JWT settings from environment variables or fall back to configuration
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_VALID_AUDIENCE") ?? 
+    builder.Configuration["JWT:ValidAudience"] ?? "http://localhost:3000";
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_VALID_ISSUER") ?? 
+    builder.Configuration["JWT:ValidIssuer"] ?? "http://localhost:5000";
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") ?? 
+    builder.Configuration["JWT:Secret"] ?? "JWTAuthenticationSecretKey123456789";
+
 // Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
 {
@@ -53,9 +70,9 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+        ValidAudience = jwtAudience,
+        ValidIssuer = jwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
         ClockSkew = TimeSpan.Zero // Remove delay of token when expire
     };
 });
@@ -148,8 +165,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Use port 5000
+// Use port from environment variable or default to 5000
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 app.Urls.Clear();
-app.Urls.Add("https://localhost:5000");
+app.Urls.Add($"https://localhost:{port}");
 
 app.Run();
