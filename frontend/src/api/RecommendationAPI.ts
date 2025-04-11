@@ -18,8 +18,8 @@ const config = {
   // Azure ML endpoint
   azure: {
     enabled: true, // Set to false to disable Azure endpoint
-    url: "https://hybrid-movie-endpoint.eastus2.inference.ml.azure.com/score",
-    token: "8Mz28Ww9OZqPTV6bco5HWBwIiQh8mqMXjpBBLKoBfbVcOzZ4arNoJQQJ99BDAAAAAAAAAAAAINFRAZML3ZeN",
+    url: import.meta.env.VITE_RECOMMENDATION_API_URL,
+    token: import.meta.env.VITE_RECOMMENDATION_API_TOKEN,
     deploymentName: "default"
   },
   // Local fallback endpoint

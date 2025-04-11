@@ -9,11 +9,13 @@ public class HybridRecommenderController : ControllerBase
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<HybridRecommenderController> _logger;
+    private readonly IConfiguration _configuration;
 
-    public HybridRecommenderController(ILogger<HybridRecommenderController> logger)
+    public HybridRecommenderController(ILogger<HybridRecommenderController> logger, IConfiguration configuration)
     {
         _httpClient = new HttpClient();
         _logger = logger;
+        _configuration = configuration;
     }
 
     public class HybridRecommendationRequest
@@ -31,8 +33,8 @@ public class HybridRecommenderController : ControllerBase
             _logger.LogInformation($"[INFO] Hybrid recommendation request received: show_id={input.show_id}, top_n={input.top_n}");
             Console.WriteLine($"[INFO] Hybrid recommendation request received: show_id={input.show_id}, top_n={input.top_n}");
 
-            var endpoint = "https://hybrid-movie-endpoint.eastus2.inference.ml.azure.com/score";
-            var apiKey = "8Mz28Ww9OZqPTV6bco5HWBwIiQh8mqMXjpBBLKoBfbVcOzZ4arNoJQQJ99BDAAAAAAAAAAAAINFRAZML3ZeN";
+            var endpoint = _configuration["HYBRID_RECOMMENDER_URL"];
+            var apiKey = _configuration["HYBRID_RECOMMENDER_TOKEN"];
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
             _httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");

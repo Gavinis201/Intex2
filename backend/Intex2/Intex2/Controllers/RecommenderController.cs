@@ -26,8 +26,8 @@ public class RecommenderController : ControllerBase
         {
             Console.WriteLine($"[INFO] Request received: title={input.title}, top_n={input.top_n}");
 
-            var endpoint = "https://movie-rec-endpoint.eastus2.inference.ml.azure.com/score";
-            var apiKey = "6oAkDYrWpPej06uZXLopPAxLEnsNfg68RJQPhYBVbde2YcaYU5NBJQQJ99BDAAAAAAAAAAAAINFRAZML2iWA";
+            var endpoint = _configuration["MOVIE_RECOMMENDER_URL"];
+            var apiKey = _configuration["MOVIE_RECOMMENDER_TOKEN"];
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
             _httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");

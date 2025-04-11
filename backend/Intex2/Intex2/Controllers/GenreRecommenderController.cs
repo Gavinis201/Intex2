@@ -24,8 +24,8 @@ public class GenreRecommenderController : ControllerBase
         {
             Console.WriteLine($"[INFO] Genre request received: title={input.title}, top_n={input.top_n}");
 
-            var endpoint = "https://genre-rec-endpoint.eastus2.inference.ml.azure.com/score";
-            var apiKey = "8oqMgJy5UNAKJlJML27oqvHO9PfVSZELzpTiQmA4c3Bm373LVk7nJQQJ99BDAAAAAAAAAAAAINFRAZML42rY";
+            var endpoint = _configuration["GENRE_RECOMMENDER_URL"];
+            var apiKey = _configuration["GENRE_RECOMMENDER_TOKEN"];
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
             _httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");
