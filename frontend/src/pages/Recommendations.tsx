@@ -6,6 +6,7 @@ import comingSoon from '../assets/images/ComingSoon.png';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Cookies from 'js-cookie';
 
 type Movie = {
   showId: string;
@@ -26,6 +27,7 @@ type Recommendation = {
   similarity: number;
   movie_poster?: string;
   genres?: string[];
+  show_id?: string;
 };
 
 export default function RecommendationsPage() {
@@ -40,10 +42,13 @@ export default function RecommendationsPage() {
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [loadingGenreRecs, setLoadingGenreRecs] = useState(false);
   const [error, setError] = useState('');
-  const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
-  const [flippedRecCards, setFlippedRecCards] = useState<Set<string>>(
-    new Set()
-  );
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [userRating, setUserRating] = useState<number>(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [modalRecommendations, setModalRecommendations] = useState<
+    Recommendation[]
+  >([]);
+  const [loadingModalRecs, setLoadingModalRecs] = useState(false);
 
   const carouselSettings = {
     dots: true,
@@ -268,28 +273,239 @@ export default function RecommendationsPage() {
     }
   };
 
-  const toggleCard = (showId: string) => {
-    setFlippedCards((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(showId)) {
-        newSet.delete(showId);
-      } else {
-        newSet.add(showId);
-      }
-      return newSet;
-    });
+  const handleCardClick = (movie: Movie) => {
+    handleMovieClick(movie);
   };
 
-  const toggleRecCard = (title: string) => {
-    setFlippedRecCards((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(title)) {
-        newSet.delete(title);
-      } else {
-        newSet.add(title);
+  const handleRecCardClick = (recommendation: any) => {
+    handleRecommendationClick(recommendation);
+  };
+
+  const getUserId = () => {
+    const userId = Cookies.get('moviesUserId');
+    return userId || '';
+  };
+
+  const fetchUserRatingForMovie = async (movieId: string) => {
+    const userId = getUserId();
+    if (!userId) return 0;
+
+    try {
+      const response = await fetch(
+        `https://localhost:5000/api/ratings/${userId}/${movieId}`
+      );
+      if (!response.ok) {
+        return 0;
       }
-      return newSet;
-    });
+
+      const rating = await response.json();
+      return rating.rating || 0;
+    } catch (error) {
+      console.error('Error fetching user rating for movie:', error);
+      return 0;
+    }
+  };
+
+  const handleMovieClick = async (movie: Movie) => {
+    setSelectedMovie(movie);
+    setHoverRating(0);
+
+    // Fetch user's rating for this movie
+    const rating = await fetchUserRatingForMovie(movie.showId);
+    setUserRating(rating);
+
+    // Fetch recommendations for this movie
+    fetchModalRecommendations(movie.showId);
+
+    // Log movie click
+    logMovieClick(movie.showId);
+  };
+
+  const logMovieClick = async (movieId: string) => {
+    try {
+      console.log(`Sending movie click data to backend for ID: ${movieId}`);
+      const response = await fetch(
+        'https://localhost:5000/api/movieinteractions/click',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            showId: movieId,
+            interactionType: 'click',
+            timestamp: new Date().toISOString(),
+          }),
+        }
+      );
+
+      if (response.ok) {
+        console.log(`Movie click logged successfully for ${movieId}`);
+      } else if (response.status === 404) {
+        console.warn(
+          `Movie click endpoint not found (404). Make sure the backend controller is implemented.`
+        );
+      } else {
+        console.error(
+          `Failed to log movie click: ${response.status} ${response.statusText}`
+        );
+      }
+    } catch (error) {
+      console.error('Error logging movie click:', error);
+    }
+  };
+
+  const fetchModalRecommendations = async (showId: string) => {
+    setLoadingModalRecs(true);
+    try {
+      console.log(`Fetching recommendations for movie ID: ${showId}`);
+
+      const response = await fetch(
+        'https://localhost:5000/api/hybrid-recommender/recommend',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            show_id: showId,
+            top_n: 5,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch recommendations: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+      console.log('Recommendations received:', data);
+
+      // Map through the recommendations and try to find matching posters
+      const enhancedRecommendations = await Promise.all(
+        data.map(async (rec: any) => {
+          try {
+            // Normalize recommendation structure
+            const recObj =
+              typeof rec === 'string' ? { show_id: '', title: rec } : rec;
+
+            // Try to find the movie in existing movies list
+            const matchingMovie = movies.find(
+              (m) =>
+                m.title.toLowerCase() === recObj.title?.toLowerCase() ||
+                m.showId === recObj.show_id
+            );
+
+            if (matchingMovie?.movie_poster) {
+              return {
+                ...recObj,
+                movie_poster: matchingMovie.movie_poster,
+              };
+            }
+
+            // If not found, fetch the movie details
+            const movieResponse = await fetch(
+              `https://localhost:5000/MoviesTitle/AllMovies?search=${encodeURIComponent(recObj.title || '')}`
+            );
+            if (movieResponse.ok) {
+              const movieData = await movieResponse.json();
+              const movie = movieData.movies?.[0];
+              return {
+                ...recObj,
+                movie_poster: movie?.movie_poster || comingSoon,
+              };
+            }
+            return {
+              ...recObj,
+              movie_poster: comingSoon,
+            };
+          } catch (error) {
+            console.error('Error fetching movie poster:', error);
+            return {
+              ...rec,
+              movie_poster: comingSoon,
+            };
+          }
+        })
+      );
+
+      setModalRecommendations(enhancedRecommendations);
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+      setModalRecommendations([]);
+    } finally {
+      setLoadingModalRecs(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+    setModalRecommendations([]);
+  };
+
+  const handleRatingSubmit = async () => {
+    if (!selectedMovie) return;
+
+    const userId = getUserId();
+    if (!userId) {
+      alert('Please log in to rate movies');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://localhost:5000/api/ratings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userId,
+          showId: selectedMovie.showId,
+          rating: userRating,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit rating');
+      }
+
+      // Optional: show a success message
+      alert('Rating submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+      alert('Failed to submit rating. Please try again.');
+    }
+  };
+
+  const handleRecommendationClick = async (recommendation: any) => {
+    try {
+      // Find the movie in movies first
+      const movie = movies.find(
+        (m) =>
+          m.showId === recommendation.show_id ||
+          m.title.toLowerCase() === recommendation.title.toLowerCase()
+      );
+      if (movie) {
+        handleMovieClick(movie);
+        return;
+      }
+
+      // If not found in movies, fetch the movie details
+      const response = await fetch(
+        `https://localhost:5000/MoviesTitle/AllMovies?search=${encodeURIComponent(recommendation.title)}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        const movieDetails = data.movies?.[0];
+        if (movieDetails) {
+          handleMovieClick(movieDetails);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching movie details:', error);
+    }
   };
 
   useEffect(() => {
@@ -321,8 +537,8 @@ export default function RecommendationsPage() {
             {movies.map((movie) => (
               <div key={movie.showId} className="movie-card-container">
                 <div
-                  className={`movie-card ${flippedCards.has(movie.showId) ? 'flipped' : ''}`}
-                  onClick={() => toggleCard(movie.showId)}
+                  className="movie-card"
+                  onClick={() => handleCardClick(movie)}
                 >
                   <div className="card-front">
                     <img
@@ -330,26 +546,7 @@ export default function RecommendationsPage() {
                       alt={movie.title}
                       className="movie-poster"
                     />
-                  </div>
-                  <div className="card-back">
-                    <div className="movie-info">
-                      <h3>{movie.title}</h3>
-                      <p>
-                        <strong>Year:</strong> {movie.releaseYear}
-                      </p>
-                      <p>
-                        <strong>Rating:</strong> {movie.rating}
-                      </p>
-                      <p>
-                        <strong>Duration:</strong> {movie.duration}
-                      </p>
-                      <p>
-                        <strong>Director:</strong> {movie.director}
-                      </p>
-                      <p>
-                        <strong>Description:</strong> {movie.description}
-                      </p>
-                    </div>
+                    <div className="movie-title-overlay">{movie.title}</div>
                   </div>
                 </div>
               </div>
@@ -365,8 +562,8 @@ export default function RecommendationsPage() {
                     {recommendations.map((rec) => (
                       <div key={rec.title} className="carousel-item">
                         <div
-                          className={`movie-card ${flippedRecCards.has(rec.title) ? 'flipped' : ''}`}
-                          onClick={() => toggleRecCard(rec.title)}
+                          className="movie-card"
+                          onClick={() => handleRecCardClick(rec)}
                         >
                           <div className="card-front">
                             <img
@@ -374,14 +571,8 @@ export default function RecommendationsPage() {
                               alt={rec.title}
                               className="movie-poster"
                             />
-                          </div>
-                          <div className="card-back">
-                            <div className="movie-info">
-                              <h3>{rec.title}</h3>
-                              <p>
-                                <strong>Similarity Score:</strong>{' '}
-                                {rec.similarity.toFixed(3)}
-                              </p>
+                            <div className="movie-title-overlay">
+                              {rec.title}
                             </div>
                           </div>
                         </div>
@@ -393,7 +584,6 @@ export default function RecommendationsPage() {
             </div>
           )}
 
-          {/* Genre recommendations section - only render if there are recommendations */}
           {genreRecommendations.length > 0 && !loadingGenreRecs && (
             <div className="recommendations-section genre-recommendations">
               <h2 className="recommendations-title">Similar by Genre</h2>
@@ -403,8 +593,8 @@ export default function RecommendationsPage() {
                     {genreRecommendations.map((rec) => (
                       <div key={`${rec.title}-genre`} className="carousel-item">
                         <div
-                          className={`movie-card genre-card ${flippedRecCards.has(`${rec.title}-genre`) ? 'flipped' : ''}`}
-                          onClick={() => toggleRecCard(`${rec.title}-genre`)}
+                          className="movie-card genre-card"
+                          onClick={() => handleRecCardClick(rec)}
                         >
                           <div className="card-front">
                             <img
@@ -421,26 +611,137 @@ export default function RecommendationsPage() {
                                 ))}
                               </div>
                             )}
-                          </div>
-                          <div className="card-back">
-                            <div className="movie-info">
-                              <h3>{rec.title}</h3>
-                              <p>
-                                <strong>Similarity Score:</strong>{' '}
-                                {rec.similarity.toFixed(3)}
-                              </p>
-                              {rec.genres && rec.genres.length > 0 && (
-                                <p>
-                                  <strong>Genres:</strong>{' '}
-                                  {rec.genres.join(', ')}
-                                </p>
-                              )}
+                            <div className="movie-title-overlay">
+                              {rec.title}
                             </div>
                           </div>
                         </div>
                       </div>
                     ))}
                   </Slider>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {selectedMovie && (
+            <div className="movie-modal">
+              <div className="movie-modal-content">
+                <div className="movie-modal-header">
+                  <h2 className="movie-modal-title">{selectedMovie.title}</h2>
+                  <button className="close-button" onClick={handleCloseModal}>
+                    ×
+                  </button>
+                </div>
+                <div className="movie-modal-body">
+                  <img
+                    src={selectedMovie.movie_poster || comingSoon}
+                    alt={selectedMovie.title}
+                    className="movie-modal-poster"
+                    onError={(e) => {
+                      e.currentTarget.src = comingSoon;
+                    }}
+                  />
+                  <div className="movie-modal-info">
+                    <p>
+                      <strong>Year:</strong> {selectedMovie.releaseYear}
+                    </p>
+                    <p>
+                      <strong>Rating:</strong> {selectedMovie.rating}
+                    </p>
+                    <p>
+                      <strong>Duration:</strong> {selectedMovie.duration}
+                    </p>
+                    <p>
+                      <strong>Director:</strong> {selectedMovie.director}
+                    </p>
+                    <p>
+                      <strong>Cast:</strong> {selectedMovie.cast}
+                    </p>
+                    <p>
+                      <strong>Country:</strong> {selectedMovie.country}
+                    </p>
+                    <p className="description">
+                      <strong>Description:</strong> {selectedMovie.description}
+                    </p>
+
+                    <div className="rating-section">
+                      <h3 className="rating-title">
+                        {userRating > 0 ? 'Your Rating' : 'Rate this movie'}
+                      </h3>
+                      <div className="rating-stars">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span
+                            key={star}
+                            className={`star ${star <= (hoverRating || userRating) ? 'active' : ''}`}
+                            onMouseEnter={() => setHoverRating(star)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            onClick={() => setUserRating(star)}
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                      <div className="rating-input">
+                        <input
+                          type="number"
+                          min="1"
+                          max="5"
+                          value={userRating}
+                          onChange={(e) =>
+                            setUserRating(Number(e.target.value))
+                          }
+                        />
+                        <button
+                          className="submit-rating"
+                          onClick={handleRatingSubmit}
+                          disabled={!userRating || !getUserId()}
+                        >
+                          {userRating > 0 ? 'Update Rating' : 'Submit Rating'}
+                        </button>
+                        {!getUserId() && (
+                          <div className="login-prompt">
+                            Please log in to rate movies
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="recommendations-section">
+                  <h3>Recommended for you</h3>
+                  {loadingModalRecs ? (
+                    <div className="loading">Loading recommendations...</div>
+                  ) : modalRecommendations.length > 0 ? (
+                    <div className="recommendations-carousel">
+                      {modalRecommendations.map((recommendation) => (
+                        <div
+                          key={recommendation.show_id || recommendation.title}
+                          className="recommendation-item"
+                          onClick={() =>
+                            handleRecommendationClick(recommendation)
+                          }
+                        >
+                          <img
+                            src={recommendation.movie_poster || comingSoon}
+                            alt={recommendation.title}
+                            className="recommendation-poster"
+                            onError={(e) => {
+                              e.currentTarget.src = comingSoon;
+                            }}
+                          />
+                          <div className="recommendation-title">
+                            {recommendation.title}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="no-recommendations">
+                      No recommendations available
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

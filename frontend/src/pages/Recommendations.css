@@ -10,6 +10,21 @@
   color: #333;
 }
 
+.interaction-helper {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  background-color: rgba(138, 43, 226, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  color: #666;
+}
+
+.interaction-helper p {
+  margin: 0;
+  font-size: 14px;
+  font-style: italic;
+}
+
 .search-results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -25,61 +40,58 @@
 .movie-card {
   width: 100%;
   height: 400px;
-  perspective: 1000px;
   cursor: pointer;
   position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.6s;
-}
-
-.movie-card.flipped {
-  transform: rotateY(180deg);
-}
-
-.card-front,
-.card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #4c4949;
+}
+
+.movie-card:hover {
+  box-shadow: 0 8px 16px rgba(138, 43, 226, 0.5);
+  transform: translateY(-5px);
 }
 
 .card-front {
+  position: relative;
+  width: 100%;
+  height: 100%;
   background-color: #fff;
-}
-
-.card-back {
-  background-color: #4c4949;
-  transform: rotateY(180deg);
-  padding: 1rem;
-  overflow-y: auto;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .movie-poster {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-.movie-info {
-  padding: 1rem;
+.movie-card:hover .movie-poster {
+  transform: scale(1.05);
 }
 
-.movie-info h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #333;
-  font-size: 1.2rem;
+.movie-title-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  color: white;
+  padding: 20px 15px 15px;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.3s ease;
 }
 
-.movie-info p {
-  margin: 0.5rem 0;
-  color: #666;
-  font-size: 0.9rem;
+.movie-card:hover .movie-title-overlay {
+  background: linear-gradient(to top, rgba(138, 43, 226, 0.9), transparent);
 }
 
 .loading,
@@ -280,4 +292,247 @@
   border-radius: 4px;
   font-size: 0.8rem;
   display: inline-block;
+}
+
+/* Movie Modal Styles */
+.movie-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.movie-modal-content {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.movie-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.movie-modal-title {
+  font-size: 24px;
+  color: #e8e7e7;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #e50914;
+}
+
+.movie-modal-body {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+}
+
+.movie-modal-poster {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.movie-modal-info {
+  color: #ffffff;
+}
+
+.movie-modal-info p {
+  margin: 10px 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.movie-modal-info strong {
+  color: #8A2BE2;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.description {
+  max-height: 150px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
+/* Rating Section */
+.rating-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rating-title {
+  font-size: 18px;
+  color: #8A2BE2;
+  margin-bottom: 10px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.star {
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.star:hover,
+.star.active {
+  color: #ffd700;
+}
+
+.rating-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rating-input input {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 4px;
+}
+
+.submit-rating {
+  padding: 8px 16px;
+  background-color: #8A2BE2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-rating:hover:not(:disabled) {
+  background-color: #7B1FA2;
+  transform: scale(1.05);
+}
+
+.submit-rating:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.login-prompt {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: 8px;
+  width: 100%;
+}
+
+/* Modal Recommendations */
+.recommendations-carousel {
+  display: flex;
+  overflow-x: auto;
+  padding: 15px 0;
+  gap: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #8A2BE2 rgba(255, 255, 255, 0.1);
+}
+
+.recommendation-item {
+  flex: 0 0 auto;
+  width: 140px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.recommendation-item:hover {
+  transform: scale(1.05);
+}
+
+.recommendation-poster {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.recommendation-title {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.no-recommendations {
+  padding: 20px;
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+/* Responsive modal design */
+@media (max-width: 768px) {
+  .movie-modal-body {
+    grid-template-columns: 1fr;
+  }
+  
+  .movie-modal-poster {
+    max-width: 250px;
+    margin: 0 auto;
+  }
+  
+  .movie-modal-title {
+    font-size: 20px;
+  }
+  
+  .movie-modal-info p {
+    font-size: 14px;
+  }
 } 

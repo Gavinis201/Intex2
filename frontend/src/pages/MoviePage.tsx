@@ -9,7 +9,9 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import comingSoon from '../assets/images/ComingSoon.png';
-import mainPage from '../assets/images/Jaws1.avif'
+import mainPage from '../assets/images/Jaws1.avif';
+import Cookies from 'js-cookie';
+
 type Movie = {
   showId: string;
   title: string;
@@ -22,6 +24,7 @@ type Movie = {
   duration: string;
   description: string;
   movie_poster: string;
+  userRating?: number;
 };
 
 type Recommendation = {
@@ -81,6 +84,14 @@ function MoviePage() {
   const [hasMore, setHasMore] = useState(true);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  const [userRatedMovies, setUserRatedMovies] = useState<Movie[]>([]);
+  const [loadingUserRatings, setLoadingUserRatings] = useState(false);
+
+  const getUserId = () => {
+    const userId = Cookies.get('moviesUserId');
+    console.log('Current moviesUserId cookie:', userId);
+    return userId || '';
+  };
 
   const carouselSettings = {
     dots: false,
@@ -121,6 +132,12 @@ function MoviePage() {
         },
       },
     ],
+  };
+
+  // New settings for rated movies carousel with autoplay disabled
+  const ratedMoviesCarouselSettings = {
+    ...carouselSettings,
+    autoplay: false,
   };
 
   const fetchMoviesByGenre = async (genre: string) => {
@@ -169,14 +186,115 @@ function MoviePage() {
   useEffect(() => {
     fetchMoviesByGenre(selectedGenre);
     fetchAllMovies(1);
+    fetchUserRatedMovies();
     setPage(1);
   }, [selectedGenre]);
+
+  const fetchUserRatedMovies = async () => {
+    const userId = getUserId();
+    if (!userId) return;
+
+    setLoadingUserRatings(true);
+    try {
+      console.log(`Fetching ratings for user ID: ${userId}`);
+
+      // Fetch the user's ratings from the ratings API
+      const response = await fetch(
+        `https://localhost:5000/api/ratings/user/${userId}`
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user ratings: ${response.status}`);
+      }
+
+      const ratings = await response.json();
+      console.log('User ratings:', ratings);
+      console.log(
+        'Rating object structure:',
+        ratings.length > 0 ? JSON.stringify(ratings[0], null, 2) : 'No ratings'
+      );
+
+      if (!ratings || ratings.length === 0) {
+        console.log('No ratings found for user');
+        setUserRatedMovies([]);
+        setLoadingUserRatings(false);
+        return;
+      }
+
+      // Get the full movie details for each rated movie using their show_id
+      const ratedMoviesDetails = await Promise.all(
+        ratings.map(async (rating: any) => {
+          try {
+            // Fetch the specific movie details using the show_id and the correct endpoint
+            console.log(
+              `Fetching details for movie with show_id: ${rating.showId}`
+            );
+            const movieResponse = await fetch(
+              `https://localhost:5000/MoviesTitle/${rating.showId}`
+            );
+
+            if (!movieResponse.ok) {
+              console.error(
+                `Failed to fetch movie details for show_id: ${rating.showId}`
+              );
+              return null;
+            }
+
+            const movieData = await movieResponse.json();
+            console.log(`Movie data for ${rating.showId}:`, movieData);
+
+            // Combine the movie data with the user's rating
+            return {
+              ...movieData,
+              userRating: rating.rating,
+            };
+          } catch (error) {
+            console.error(
+              `Error fetching movie details for show_id: ${rating.showId}`,
+              error
+            );
+            return null;
+          }
+        })
+      );
+
+      // Filter out any null results (failed fetches)
+      const validMovies = ratedMoviesDetails.filter((movie) => movie !== null);
+      console.log('Valid rated movies:', validMovies);
+
+      setUserRatedMovies(validMovies);
+    } catch (error) {
+      console.error('Error fetching user rated movies:', error);
+      setUserRatedMovies([]);
+    } finally {
+      setLoadingUserRatings(false);
+    }
+  };
+
+  const fetchUserRatingForMovie = async (movieId: string) => {
+    const userId = getUserId();
+    if (!userId) return 0;
+
+    try {
+      const response = await fetch(
+        `https://localhost:5000/api/ratings/${userId}/${movieId}`
+      );
+      if (!response.ok) {
+        return 0;
+      }
+
+      const rating = await response.json();
+      return rating.rating || 0;
+    } catch (error) {
+      console.error('Error fetching user rating for movie:', error);
+      return 0;
+    }
+  };
 
   // Add an error handler for images
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
-    e.currentTarget.src ;
+    e.currentTarget.src;
   };
 
   const handleScroll = useCallback(() => {
@@ -206,12 +324,40 @@ function MoviePage() {
     setLoading(true);
   };
 
-  const handleMovieClick = (movie: Movie) => {
+  const handleMovieClick = async (movie: Movie) => {
     setSelectedMovie(movie);
-    setUserRating(0);
     setHoverRating(0);
     fetchRecommendations(movie.showId);
     logMovieClick(movie.showId);
+
+    // Fetch user's rating for this movie
+    const rating = await fetchUserRatingForMovie(movie.showId);
+    setUserRating(rating);
+  };
+
+  const handleRecommendationClick = async (recommendation: Recommendation) => {
+    try {
+      // Find the movie in allMovies first
+      const movie = allMovies.find((m) => m.showId === recommendation.show_id);
+      if (movie) {
+        handleMovieClick(movie);
+        return;
+      }
+
+      // If not found in allMovies, fetch the movie details
+      const response = await fetch(
+        `https://localhost:5000/MoviesTitle/AllMovies?search=${encodeURIComponent(recommendation.title)}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        const movieDetails = data.movies?.[0];
+        if (movieDetails) {
+          handleMovieClick(movieDetails);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching movie details:', error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -222,6 +368,12 @@ function MoviePage() {
   const handleRatingSubmit = async () => {
     if (!selectedMovie) return;
 
+    const userId = getUserId();
+    if (!userId) {
+      alert('Please log in to rate movies');
+      return;
+    }
+
     try {
       const response = await fetch('https://localhost:5000/api/ratings', {
         method: 'POST',
@@ -229,6 +381,7 @@ function MoviePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          userId: userId,
           showId: selectedMovie.showId,
           rating: userRating,
         }),
@@ -238,10 +391,14 @@ function MoviePage() {
         throw new Error('Failed to submit rating');
       }
 
-      fetchMoviesByGenre(selectedGenre);
-      handleCloseModal();
+      // Refresh the user's rated movies list
+      fetchUserRatedMovies();
+
+      // Optional: show a success message
+      alert('Rating submitted successfully!');
     } catch (error) {
       console.error('Error submitting rating:', error);
+      alert('Failed to submit rating. Please try again.');
     }
   };
 
@@ -316,7 +473,9 @@ function MoviePage() {
         data.map(async (rec: Recommendation) => {
           try {
             // First try to find the movie in allMovies
-            const matchingMovie = allMovies.find((m) => m.showId === rec.show_id);
+            const matchingMovie = allMovies.find(
+              (m) => m.showId === rec.show_id
+            );
             if (matchingMovie?.movie_poster) {
               return {
                 ...rec,
@@ -366,7 +525,11 @@ function MoviePage() {
         <div className="button-row">
           <div className="jaws">
             <h1>Jaws</h1>
-            <p className="movie-description">When a great white shark terrorizes a small beach town, the local police chief, a marine biologist, and a grizzled fisherman set out to stop it.</p>
+            <p className="movie-description">
+              When a great white shark terrorizes a small beach town, the local
+              police chief, a marine biologist, and a grizzled fisherman set out
+              to stop it.
+            </p>
             <div className="d-flex gap-5">
               <button className="play-button">
                 <FontAwesomeIcon icon={faPlay} className="icon" /> Play
@@ -414,11 +577,59 @@ function MoviePage() {
                       className="movie-poster"
                       onError={handleImageError}
                     />
-              </div>
-            </div>
-          ))}
-        </Slider>
+                  </div>
+                </div>
+              ))}
+            </Slider>
           </div>
+
+          {/* User Rated Movies Section */}
+          {getUserId() && (
+            <div className="rated-movies-section">
+              <h2>Your Rated Movies</h2>
+              {loadingUserRatings ? (
+                <div className="loading">Loading your rated movies...</div>
+              ) : userRatedMovies.length > 0 ? (
+                <div className="rated-movies-carousel">
+                  <Slider {...ratedMoviesCarouselSettings}>
+                    {userRatedMovies.map((movie) => (
+                      <div key={movie.showId} className="carousel-item">
+                        <div
+                          className="movie-card rated-movie-card"
+                          onClick={() => handleMovieClick(movie)}
+                        >
+                          <img
+                            src={movie.movie_poster}
+                            alt={movie.title}
+                            className="movie-poster"
+                            onError={handleImageError}
+                          />
+                          <div className="user-rating-badge">
+                            {movie.userRating} ★
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </Slider>
+                </div>
+              ) : (
+                <div className="no-rated-movies">
+                  <p>
+                    You haven't rated any movies yet. Rate movies to see them
+                    appear here!
+                  </p>
+                  <button
+                    className="explore-button"
+                    onClick={() =>
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }
+                  >
+                    Explore Movies to Rate
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="all-movies-section">
             <h2>All Movies</h2>
@@ -485,7 +696,9 @@ function MoviePage() {
                 </p>
 
                 <div className="rating-section">
-                  <h3 className="rating-title">Rate this movie</h3>
+                  <h3 className="rating-title">
+                    {userRating > 0 ? 'Your Rating' : 'Rate this movie'}
+                  </h3>
                   <div className="rating-stars">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <span
@@ -510,10 +723,15 @@ function MoviePage() {
                     <button
                       className="submit-rating"
                       onClick={handleRatingSubmit}
-                      disabled={!userRating}
+                      disabled={!userRating || !getUserId()}
                     >
-                      Submit Rating
+                      {userRating > 0 ? 'Update Rating' : 'Submit Rating'}
                     </button>
+                    {!getUserId() && (
+                      <div className="login-prompt">
+                        Please log in to rate movies
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -529,14 +747,7 @@ function MoviePage() {
                     <div
                       key={recommendation.show_id}
                       className="recommendation-item"
-                      onClick={() => {
-                        const movie = allMovies.find(
-                          (m) => m.showId === recommendation.show_id
-                        );
-                        if (movie) {
-                          handleMovieClick(movie);
-                        }
-                      }}
+                      onClick={() => handleRecommendationClick(recommendation)}
                     >
                       <img
                         src={recommendation.movie_poster || comingSoon}
