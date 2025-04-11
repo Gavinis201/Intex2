@@ -562,10 +562,12 @@ function MoviePage() {
                     onClick={() => handleMovieClick(movie)}
                   >
                     <img
-                      src={movie.movie_poster}
+                      src={movie.movie_poster || comingSoon}
                       alt={movie.title}
                       className="movie-poster"
-                      onError={handleImageError}
+                      onError={(e) => {
+                        e.currentTarget.src = comingSoon;
+                      }}
                     />
                   </div>
                 </div>
@@ -589,10 +591,12 @@ function MoviePage() {
                           onClick={() => handleMovieClick(movie)}
                         >
                           <img
-                            src={movie.movie_poster}
+                            src={movie.movie_poster || comingSoon}
                             alt={movie.title}
                             className="movie-poster"
-                            onError={handleImageError}
+                            onError={(e) => {
+                              e.currentTarget.src = comingSoon;
+                            }}
                           />
                           <div className="user-rating-badge">
                             {movie.userRating} ★
@@ -659,10 +663,12 @@ function MoviePage() {
             </div>
             <div className="movie-modal-body">
               <img
-                src={selectedMovie.movie_poster}
+                src={selectedMovie.movie_poster || comingSoon}
                 alt={selectedMovie.title}
                 className="movie-modal-poster"
-                onError={handleImageError}
+                onError={(e) => {
+                  e.currentTarget.src = comingSoon;
+                }}
               />
               <div className="movie-modal-info">
                 <p>
