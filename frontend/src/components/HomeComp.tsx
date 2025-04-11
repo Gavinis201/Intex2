@@ -26,37 +26,16 @@ const HomeComp = () => {
     { img: badBlood, title: 'Bad Blood' }
   ];
 
-  // Check if user is admin
-  const userIsAdmin = isAdmin();
-
   return (
     <>
     <div className="backgroundPicHomePage">
       <div className="homeContent">
         <br /><br />
         <h1>Thousands of movies,<br />Best Ratings, and more</h1>
-        <h4>Ready to start? Click here</h4>
+        <h4>Ready to start? Click below</h4>
         <Link to="/CreateAccount">
           <button className="create-account-btn">Create an Account</button>
         </Link>
-        
-        {userIsAdmin && (
-          <div className="admin-button-container" style={{ marginTop: '20px' }}>
-            <Link to="/AdminMovies">
-              <button className="admin-button" style={{ 
-                backgroundColor: '#e50914', 
-                color: 'white', 
-                padding: '10px 20px', 
-                border: 'none', 
-                borderRadius: '5px', 
-                fontWeight: 'bold',
-                cursor: 'pointer' 
-              }}>
-                Admin Dashboard
-              </button>
-            </Link>
-          </div>
-        )}
       </div>
       <div className="homeContent trending-section">
         <h3>Trending Now</h3>
@@ -75,7 +54,6 @@ const HomeComp = () => {
         </div>
       </div>
     </div>
-
     </>
   );
 };
