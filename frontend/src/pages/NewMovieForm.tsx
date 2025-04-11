@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MoviesTitle } from "../types/Movie";
+import { useState } from 'react';
+import { MoviesTitle } from '../types/Movie';
 
 interface NewMovieFormProps {
   onSuccess: () => void;
@@ -8,14 +8,15 @@ interface NewMovieFormProps {
 
 const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
   const [formData, setFormData] = useState<Partial<MoviesTitle>>({
-    title: "",
-    director: "",
-    type: "",
+    title: '',
+    director: '',
+    type: '',
     releaseYear: new Date().getFullYear(),
-    duration: "",
-    description: "",
+    duration: '',
+    description: '',
     showId: crypto.randomUUID(), // or use something else for now
   });
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -28,37 +29,52 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
     e.preventDefault();
 
     // Add confirmation dialog
-    const confirmAdd = window.confirm("Are you sure you want to add this movie?");
+    const confirmAdd = window.confirm(
+      'Are you sure you want to add this movie?'
+    );
     if (!confirmAdd) return;
+
+    setSubmitting(true);
 
     try {
       // Get the authentication token
       const token = localStorage.getItem('authToken');
-      
+
       if (!token) {
-        alert("You must be logged in to add movies.");
+        alert('You must be logged in to add movies.');
+        setSubmitting(false);
         return;
       }
-      
-      const response = await fetch("https://localhost:5000/MoviesTitle/AddMovie", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(formData),
-      });
+
+      console.log(
+        'Sending request with token:',
+        token.substring(0, 20) + '...'
+      );
+
+      const response = await fetch(
+        'https://localhost:5000/MoviesTitle/AddMovie',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Error adding movie:", errorText);
-        throw new Error("Failed to add movie");
+        console.error('Error adding movie:', errorText);
+        throw new Error('Failed to add movie');
       }
 
       onSuccess();
     } catch (error) {
-      console.error("Add error:", error);
-      alert("Error adding movie. Make sure you have admin privileges.");
+      console.error('Add error:', error);
+      alert('Error adding movie. Make sure you have admin privileges.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -127,10 +143,15 @@ const NewMovieForm: React.FC<NewMovieFormProps> = ({ onSuccess, onCancel }) => {
       </div>
 
       <div className="d-flex gap-2">
-        <button type="submit" className="btn btn-primary">
-          Add Movie
+        <button type="submit" className="btn btn-primary" disabled={submitting}>
+          {submitting ? 'Adding...' : 'Add Movie'}
         </button>
-        <button type="button" className="btn btn-secondary" onClick={onCancel}>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={onCancel}
+          disabled={submitting}
+        >
           Cancel
         </button>
       </div>

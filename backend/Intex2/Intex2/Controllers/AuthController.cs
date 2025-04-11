@@ -347,45 +347,82 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("refresh-token")]
-    [AllowAnonymous]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel model)
+    [Authorize]
+    public async Task<IActionResult> RefreshToken()
     {
         try
         {
-            var principal = GetPrincipalFromExpiredToken(model.Token);
-            if (principal == null)
-            {
-                return BadRequest(new AuthResponse { Success = false, Message = "Invalid token" });
-            }
-
-            var username = principal.Identity.Name;
-            var user = await _userManager.FindByNameAsync(username);
-
-            if (user == null || user.RefreshToken != model.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-            {
-                return BadRequest(new AuthResponse { Success = false, Message = "Invalid refresh token" });
-            }
-
-            var newToken = GetToken(principal.Claims.ToList());
-            var newRefreshToken = GenerateRefreshToken();
+            // Get the current user
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
             
-            user.RefreshToken = newRefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
-            await _userManager.UpdateAsync(user);
+            if (user == null)
+            {
+                return Unauthorized(new AuthResponse
+                {
+                    Success = false,
+                    Message = "User not found"
+                });
+            }
+            
+            // Create fresh claims for the token
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
+            };
 
+            // Check if this user is an admin and add the role claim
+            if (user.MoviesUserId.HasValue)
+            {
+                var moviesUser = await _context.MoviesUsers.FindAsync(user.MoviesUserId);
+                authClaims.Add(new Claim("MoviesUserId", user.MoviesUserId.Value.ToString()));
+                
+                if (moviesUser != null && moviesUser.Admin == 1)
+                {
+                    // Add admin role to claims
+                    authClaims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+                    Console.WriteLine($"Added Administrator role to refreshed token for user: {user.Email}");
+                    
+                    // Also ensure user is in the admin role in the database
+                    if (!await _userManager.IsInRoleAsync(user, "Administrator"))
+                    {
+                        await _userManager.AddToRoleAsync(user, "Administrator");
+                        Console.WriteLine($"Added user {user.Email} to Administrator role in database");
+                    }
+                }
+            }
+
+            var token = GetToken(authClaims);
+            
+            // Set auth cookie
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = token.ValidTo
+            };
+            Response.Cookies.Append("authToken", new JwtSecurityTokenHandler().WriteToken(token), cookieOptions);
+            
             return Ok(new AuthResponse
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(newToken),
-                RefreshToken = newRefreshToken,
-                Expiration = newToken.ValidTo,
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo,
                 Success = true,
                 Message = "Token refreshed successfully"
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error refreshing token");
-            return StatusCode(500, new AuthResponse { Success = false, Message = "Error refreshing token" });
+            Console.WriteLine($"Exception in RefreshToken: {ex.Message}");
+            return StatusCode(500, new AuthResponse 
+            { 
+                Success = false, 
+                Message = "An error occurred during token refresh. Please try again later."
+            });
         }
     }
 
@@ -647,6 +684,119 @@ public class AuthController : ControllerBase
         {
             _logger.LogError(ex, "Error disabling two-factor authentication");
             return StatusCode(500, new { Success = false, Message = "Error disabling two-factor authentication", Error = ex.Message });
+        }
+    }
+
+    [HttpGet]
+    [Route("manual-admin-check")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ManualAdminCheck(string email)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound(new { message = $"User with email {email} not found." });
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var isInAdminRole = roles.Contains("Administrator");
+            
+            // Get MoviesUser info if available
+            string moviesUserAdmin = "N/A";
+            if (user.MoviesUserId.HasValue)
+            {
+                var moviesUser = await _context.MoviesUsers.FindAsync(user.MoviesUserId);
+                if (moviesUser != null)
+                {
+                    moviesUserAdmin = moviesUser.Admin == 1 ? "Yes" : "No";
+                }
+            }
+            
+            return Ok(new
+            {
+                email = user.Email,
+                id = user.Id,
+                moviesUserId = user.MoviesUserId,
+                isInAdminRole = isInAdminRole,
+                roles = roles,
+                adminInDatabase = moviesUserAdmin,
+                message = "User admin status retrieved successfully."
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message, stackTrace = ex.StackTrace });
+        }
+    }
+
+    [HttpPost]
+    [Route("assign-admin-role")]
+    [AllowAnonymous] // Be careful with this in production - should be restricted
+    public async Task<IActionResult> AssignAdminRole(string email)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound(new { message = $"User with email {email} not found." });
+            }
+
+            // Check if user has MoviesUserId
+            if (!user.MoviesUserId.HasValue)
+            {
+                return BadRequest(new { message = "User does not have a linked MoviesUser record." });
+            }
+
+            // Update the movies_users table to set admin=1
+            var moviesUser = await _context.MoviesUsers.FindAsync(user.MoviesUserId);
+            if (moviesUser == null)
+            {
+                return BadRequest(new { message = "MoviesUser record not found." });
+            }
+
+            moviesUser.Admin = 1;
+            await _context.SaveChangesAsync();
+            
+            // Add user to Administrator role
+            if (!await _userManager.IsInRoleAsync(user, "Administrator"))
+            {
+                var result = await _userManager.AddToRoleAsync(user, "Administrator");
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new { message = "Failed to add user to Administrator role.", errors = result.Errors });
+                }
+            }
+            
+            // Create a new token with admin privileges
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Role, "Administrator")
+            };
+            
+            if (user.MoviesUserId.HasValue)
+            {
+                authClaims.Add(new Claim("MoviesUserId", user.MoviesUserId.Value.ToString()));
+            }
+            
+            var token = GetToken(authClaims);
+            
+            return Ok(new
+            {
+                message = "User assigned to Administrator role successfully.",
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                expiration = token.ValidTo
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message, stackTrace = ex.StackTrace });
         }
     }
 

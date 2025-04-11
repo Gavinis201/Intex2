@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MoviesTitle } from "../types/Movie";
+import { useState } from 'react';
+import { MoviesTitle } from '../types/Movie';
 
 interface EditMovieFormProps {
   movie: MoviesTitle;
@@ -7,8 +7,13 @@ interface EditMovieFormProps {
   onCancel: () => void;
 }
 
-const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCancel }) => {
+const EditMovieForm: React.FC<EditMovieFormProps> = ({
+  movie,
+  onSuccess,
+  onCancel,
+}) => {
   const [formData, setFormData] = useState<Partial<MoviesTitle>>({ ...movie });
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -16,61 +21,72 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "releaseYear" ? Number(value) : value,
+      [name]: name === 'releaseYear' ? Number(value) : value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Add confirmation dialog
-    const confirmUpdate = window.confirm("Are you sure you want to save changes to this movie?");
+    const confirmUpdate = window.confirm(
+      'Are you sure you want to save changes to this movie?'
+    );
     if (!confirmUpdate) return;
-  
+
     const fullPayload = {
       ...formData,
       showId: movie.showId, // ensure it's always included
     };
-  
-    console.log("Sending PUT request to:", `https://localhost:5000/MoviesTitle/UpdateMovie/${movie.showId}`);
-    console.log("Payload:", fullPayload);
-  
+
+    console.log(
+      'Sending PUT request to:',
+      `https://localhost:5000/MoviesTitle/UpdateMovie/${movie.showId}`
+    );
+    console.log('Payload:', fullPayload);
+
+    setSubmitting(true);
+
     try {
       // Get the authentication token
       const token = localStorage.getItem('authToken');
-      
+
       if (!token) {
-        alert("You must be logged in to edit movies.");
+        alert('You must be logged in to edit movies.');
+        setSubmitting(false);
         return;
       }
-      
+
+      console.log('Using token:', token.substring(0, 20) + '...');
+
       const response = await fetch(
         `https://localhost:5000/MoviesTitle/UpdateMovie/${movie.showId}`,
         {
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(fullPayload),
         }
       );
-  
-      console.log("Response status:", response.status);
-  
+
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
         const text = await response.text();
-        console.error("Error response body:", text);
-        throw new Error("Failed to update movie");
+        console.error('Error response body:', text);
+        throw new Error('Failed to update movie');
       }
-  
+
       onSuccess();
     } catch (error) {
-      console.error("Error caught:", error);
-      alert("Error updating movie. Make sure you have admin privileges.");
+      console.error('Error caught:', error);
+      alert('Error updating movie. Make sure you have admin privileges.');
+    } finally {
+      setSubmitting(false);
     }
   };
-  
 
   return (
     <form onSubmit={handleSubmit} className="mb-4">
@@ -81,7 +97,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
         <input
           name="title"
           className="form-control"
-          value={formData.title || ""}
+          value={formData.title || ''}
           onChange={handleChange}
           required
         />
@@ -92,7 +108,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
         <input
           name="director"
           className="form-control"
-          value={formData.director || ""}
+          value={formData.director || ''}
           onChange={handleChange}
         />
       </div>
@@ -102,7 +118,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
         <input
           name="type"
           className="form-control"
-          value={formData.type || ""}
+          value={formData.type || ''}
           onChange={handleChange}
         />
       </div>
@@ -113,7 +129,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
           type="number"
           name="releaseYear"
           className="form-control"
-          value={formData.releaseYear || ""}
+          value={formData.releaseYear || ''}
           onChange={handleChange}
         />
       </div>
@@ -123,7 +139,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
         <input
           name="duration"
           className="form-control"
-          value={formData.duration || ""}
+          value={formData.duration || ''}
           onChange={handleChange}
         />
       </div>
@@ -133,16 +149,21 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({ movie, onSuccess, onCance
         <textarea
           name="description"
           className="form-control"
-          value={formData.description || ""}
+          value={formData.description || ''}
           onChange={handleChange}
         ></textarea>
       </div>
 
       <div className="d-flex gap-2">
-        <button type="submit" className="btn btn-primary">
-          Save Changes
+        <button type="submit" className="btn btn-primary" disabled={submitting}>
+          {submitting ? 'Saving...' : 'Save Changes'}
         </button>
-        <button type="button" className="btn btn-secondary" onClick={onCancel}>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={onCancel}
+          disabled={submitting}
+        >
           Cancel
         </button>
       </div>

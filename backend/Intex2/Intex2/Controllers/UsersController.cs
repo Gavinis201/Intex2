@@ -153,4 +153,25 @@ public class UsersController : ControllerBase
 
         return NoContent();
     }
+
+    // GET: /api/users/check-admin/{id}
+    [HttpGet("check-admin/{id}")]
+    [AllowAnonymous]
+    public async Task<ActionResult> CheckAdminStatus(int id)
+    {
+        try
+        {
+            var moviesUser = await _context.MoviesUsers.FindAsync(id);
+            if (moviesUser == null)
+            {
+                return NotFound(new { isAdmin = false, message = "User not found" });
+            }
+
+            return Ok(new { isAdmin = moviesUser.Admin == 1 });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { isAdmin = false, error = ex.Message });
+        }
+    }
 } 

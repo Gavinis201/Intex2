@@ -318,7 +318,7 @@ export const getMoviesUserId = () => {
   }
 };
 
-export const isAdmin = () => {
+export const isAdmin = async () => {
   const token = getAuthToken();
   if (!token) return false;
   
@@ -328,14 +328,44 @@ export const isAdmin = () => {
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const payload = JSON.parse(window.atob(base64));
     
+    // Add debugging
+    console.log('JWT Token Payload:', payload);
+    console.log('Role claim:', payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']);
+    console.log('MoviesUserId:', payload['MoviesUserId']);
+    
     // Get the role claim value
     const roleClaim = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     
     // Check if the role claim exists and includes Administrator
-    return payload && 
+    const hasAdminRole = payload && 
           (roleClaim === 'Administrator' ||
            (Array.isArray(roleClaim) && roleClaim.includes('Administrator')) ||
            (payload.roles && payload.roles.includes('Administrator')));
+    
+    // If we already have admin role in JWT, return true
+    if (hasAdminRole) {
+      console.log('User has Administrator role in JWT claims');
+      return true;
+    }
+    
+    // If no admin role in JWT but we have a MoviesUserId, check the database
+    const moviesUserId = payload['MoviesUserId'];
+    if (moviesUserId) {
+      console.log(`Checking admin status for MoviesUserId: ${moviesUserId}`);
+      try {
+        // Call the backend to check admin status
+        const response = await fetch(`https://localhost:5000/api/users/check-admin/${moviesUserId}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Admin check result:', data);
+          return data.isAdmin;
+        }
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+      }
+    }
+    
+    return false;
   } catch (error) {
     console.error('Error parsing JWT token:', error);
     return false;

@@ -1,12 +1,12 @@
-import { SetStateAction, useEffect, useState } from "react";
-import { MoviesTitle } from "../types/Movie";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./AdminMoviePage.css";
-import NewMovieForm from "./NewMovieForm";
-import EditMovieForm from "../components/EditMovieForm";
-import Pagination from "../components/Pagination";
+import { SetStateAction, useEffect, useState } from 'react';
+import { MoviesTitle } from '../types/Movie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './AdminMoviePage.css';
+import NewMovieForm from './NewMovieForm';
+import EditMovieForm from '../components/EditMovieForm';
+import Pagination from '../components/Pagination';
 
 const AdminMoviePage = () => {
   const [movies, setMovies] = useState<MoviesTitle[]>([]);
@@ -17,19 +17,55 @@ const AdminMoviePage = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [showForm, setShowForm] = useState<boolean>(false);
   const [editingMovie, setEditingMovie] = useState<MoviesTitle | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [adminTokenRefreshed, setAdminTokenRefreshed] = useState(false);
+
+  // Add function to refresh admin token
+  const refreshAdminToken = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) return false;
+
+      // Call login refresh endpoint to get a new token with admin claims
+      const response = await fetch(
+        'https://localhost:5000/api/Auth/refresh-token',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.token) {
+          // Update token in localStorage
+          localStorage.setItem('authToken', data.token);
+          console.log('Admin token refreshed successfully');
+          return true;
+        }
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Error refreshing admin token:', error);
+      return false;
+    }
+  };
 
   const fetchMovies = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      
+
       const response = await fetch(
         `https://localhost:5000/MoviesTitle/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}&search=${encodeURIComponent(searchTerm)}`,
         {
-          headers: token ? { "Authorization": `Bearer ${token}` } : {}
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
       );
-      if (!response.ok) throw new Error("Failed to fetch movies");
+      if (!response.ok) throw new Error('Failed to fetch movies');
 
       const data = await response.json();
       setMovies(data.movies ?? []);
@@ -41,10 +77,24 @@ const AdminMoviePage = () => {
     }
   };
 
+  // First refresh the admin token when page loads
+  useEffect(() => {
+    const initializeAdminPage = async () => {
+      setLoading(true);
+      const refreshed = await refreshAdminToken();
+      setAdminTokenRefreshed(refreshed);
+      fetchMovies();
+    };
+
+    initializeAdminPage();
+  }, []);
+
   // Fetch movies whenever page size, page number, or search changes
   useEffect(() => {
-    fetchMovies();
-  }, [pageSize, pageNum, searchTerm]);
+    if (adminTokenRefreshed) {
+      fetchMovies();
+    }
+  }, [pageSize, pageNum, searchTerm, adminTokenRefreshed]);
 
   // Reset to first page when search term changes
   useEffect(() => {
@@ -52,35 +102,40 @@ const AdminMoviePage = () => {
   }, [searchTerm]);
 
   const handleDelete = async (showId: string) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this movie?");
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this movie?'
+    );
     if (!confirmDelete) return;
 
     try {
       // Get the authentication token
       const token = localStorage.getItem('authToken');
-      
+
       if (!token) {
-        alert("You must be logged in to delete movies.");
+        alert('You must be logged in to delete movies.');
         return;
       }
 
-      const response = await fetch(`https://localhost:5000/MoviesTitle/DeleteMovie/${showId}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
+      const response = await fetch(
+        `https://localhost:5000/MoviesTitle/DeleteMovie/${showId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Error deleting movie:", errorText);
-        throw new Error("Failed to delete movie");
+        console.error('Error deleting movie:', errorText);
+        throw new Error('Failed to delete movie');
       }
 
       setMovies(movies.filter((m) => m.showId !== showId));
     } catch (error) {
-      console.error("Delete error:", error);
-      alert("Failed to delete movie. Make sure you have admin privileges.");
+      console.error('Delete error:', error);
+      alert('Failed to delete movie. Make sure you have admin privileges.');
     }
   };
 
@@ -103,7 +158,10 @@ const AdminMoviePage = () => {
           />
 
           {!showForm && (
-            <button className="add-button-styles gap-left" onClick={() => setShowForm(true)}>
+            <button
+              className="add-button-styles gap-left"
+              onClick={() => setShowForm(true)}
+            >
               Add Movie
             </button>
           )}
@@ -159,7 +217,7 @@ const AdminMoviePage = () => {
                 <FontAwesomeIcon
                   icon={faEdit}
                   className="text-primary"
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => setEditingMovie(m)}
                 />
               </td>
@@ -167,7 +225,7 @@ const AdminMoviePage = () => {
                 <FontAwesomeIcon
                   icon={faTrash}
                   className="text-danger"
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => handleDelete(m.showId)}
                 />
               </td>
