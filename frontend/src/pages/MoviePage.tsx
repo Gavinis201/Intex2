@@ -507,17 +507,20 @@ function MoviePage() {
 
   return (
     <div className="movie-page">
-      <div className="image-container">
-        <img src={mainPage} alt="Jaws" className="interstelllar" />
-        <div className="button-row">
-          <div className="jaws">
-            <h1>Jaws</h1>
-            <p className="movie-description">
+      <div className="hero-container">
+        <div className="hero-background">
+          <img src={mainPage} alt="Jaws" className="hero-image" />
+          <div className="hero-overlay"></div>
+        </div>
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1 className="hero-title">Jaws</h1>
+            <p className="hero-description">
               When a great white shark terrorizes a small beach town, the local
               police chief, a marine biologist, and a grizzled fisherman set out
               to stop it.
             </p>
-            <div className="d-flex gap-5">
+            <div className="hero-buttons">
               <button className="play-button">
                 <FontAwesomeIcon icon={faPlay} className="icon" /> Play
               </button>
@@ -628,10 +631,12 @@ function MoviePage() {
                   onClick={() => handleMovieClick(movie)}
                 >
                   <img
-                    src={movie.movie_poster}
+                    src={movie.movie_poster || comingSoon}
                     alt={movie.title}
                     className="movie-poster"
-                    onError={handleImageError}
+                    onError={(e) => {
+                      e.currentTarget.src = comingSoon;
+                    }}
                   />
                 </div>
               ))}
