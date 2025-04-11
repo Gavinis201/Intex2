@@ -545,6 +545,9 @@ export default function RecommendationsPage() {
                       src={movie.movie_poster || comingSoon}
                       alt={movie.title}
                       className="movie-poster"
+                      onError={(e) => {
+                        e.currentTarget.src = comingSoon;
+                      }}
                     />
                     <div className="movie-title-overlay">{movie.title}</div>
                   </div>
@@ -570,6 +573,9 @@ export default function RecommendationsPage() {
                               src={rec.movie_poster || comingSoon}
                               alt={rec.title}
                               className="movie-poster"
+                              onError={(e) => {
+                                e.currentTarget.src = comingSoon;
+                              }}
                             />
                             <div className="movie-title-overlay">
                               {rec.title}
@@ -601,6 +607,9 @@ export default function RecommendationsPage() {
                               src={rec.movie_poster || comingSoon}
                               alt={rec.title}
                               className="movie-poster"
+                              onError={(e) => {
+                                e.currentTarget.src = comingSoon;
+                              }}
                             />
                             {rec.genres && rec.genres.length > 0 && (
                               <div className="genres-container">
