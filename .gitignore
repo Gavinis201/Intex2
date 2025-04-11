@@ -22,3 +22,9 @@
 # Rider
 .idea/
 *.sln.iml 
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+*.db3 
