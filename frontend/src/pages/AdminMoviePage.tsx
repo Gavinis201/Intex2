@@ -28,7 +28,7 @@ const AdminMoviePage = () => {
 
       // Call login refresh endpoint to get a new token with admin claims
       const response = await fetch(
-        'https://localhost:5000/api/Auth/refresh-token',
+        `${import.meta.env.VITE_AUTH_API_URL}/refresh-token`,
         {
           method: 'POST',
           headers: {
@@ -60,7 +60,7 @@ const AdminMoviePage = () => {
       const token = localStorage.getItem('authToken');
 
       const response = await fetch(
-        `https://localhost:5000/MoviesTitle/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}&search=${encodeURIComponent(searchTerm)}`,
+        `${import.meta.env.VITE_MOVIES_API_URL}/AllMovies?pageSize=${pageSize}&pageNum=${pageNum}&search=${encodeURIComponent(searchTerm)}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
@@ -117,7 +117,7 @@ const AdminMoviePage = () => {
       }
 
       const response = await fetch(
-        `https://localhost:5000/MoviesTitle/DeleteMovie/${showId}`,
+        `${import.meta.env.VITE_MOVIES_API_URL}/DeleteMovie/${showId}`,
         {
           method: 'DELETE',
           headers: {

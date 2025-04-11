@@ -41,7 +41,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({
 
     console.log(
       'Sending PUT request to:',
-      `https://localhost:5000/MoviesTitle/UpdateMovie/${movie.showId}`
+      `${import.meta.env.VITE_MOVIES_API_URL}/UpdateMovie/${movie.showId}`
     );
     console.log('Payload:', fullPayload);
 
@@ -60,7 +60,7 @@ const EditMovieForm: React.FC<EditMovieFormProps> = ({
       console.log('Using token:', token.substring(0, 20) + '...');
 
       const response = await fetch(
-        `https://localhost:5000/MoviesTitle/UpdateMovie/${movie.showId}`,
+        `${import.meta.env.VITE_MOVIES_API_URL}/UpdateMovie/${movie.showId}`,
         {
           method: 'PUT',
           headers: {

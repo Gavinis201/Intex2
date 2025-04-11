@@ -125,7 +125,7 @@ const TestAdmin: React.FC = () => {
       }
 
       const response = await fetch(
-        'https://localhost:5000/api/Auth/refresh-token',
+        `${import.meta.env.VITE_AUTH_API_URL}/refresh-token`,
         {
           method: 'POST',
           headers: {

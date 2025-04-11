@@ -1,7 +1,7 @@
 // Auth service to handle authentication across the application
 import axios from 'axios';
 
-const API_URL = 'https://localhost:5000/api/auth/';
+const API_URL = import.meta.env.VITE_AUTH_API_URL + '/';
 
 // Helper function to get a cookie value
 const getCookie = (name: string): string | null => {
@@ -215,7 +215,7 @@ export const register = async (userData: any, authData: any) => {
   try {
     // First try to create a user (this might fail if user exists)
     try {
-      await axios.post('https://localhost:5000/api/users', userData);
+      await axios.post(import.meta.env.VITE_API_URL + '/users', userData);
     } catch (error: any) {
       // If not a "user exists" error, throw it
       if (!error.response?.data?.message?.includes('already exists')) {
@@ -354,7 +354,7 @@ export const isAdmin = async () => {
       console.log(`Checking admin status for MoviesUserId: ${moviesUserId}`);
       try {
         // Call the backend to check admin status
-        const response = await fetch(`https://localhost:5000/api/users/check-admin/${moviesUserId}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/check-admin/${moviesUserId}`);
         if (response.ok) {
           const data = await response.json();
           console.log('Admin check result:', data);

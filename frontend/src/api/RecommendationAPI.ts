@@ -17,14 +17,14 @@ interface RecommendationResult {
 const config = {
   // Azure ML endpoint
   azure: {
-    enabled: true, // Set to false to disable Azure endpoint
-    url: "https://hybrid-movie-endpoint.eastus2.inference.ml.azure.com/score",
-    token: "8Mz28Ww9OZqPTV6bco5HWBwIiQh8mqMXjpBBLKoBfbVcOzZ4arNoJQQJ99BDAAAAAAAAAAAAINFRAZML3ZeN",
-    deploymentName: "default"
+    enabled: import.meta.env.VITE_AZURE_ML_ENABLED === 'true',
+    url: import.meta.env.VITE_AZURE_ML_URL,
+    token: import.meta.env.VITE_AZURE_ML_TOKEN,
+    deploymentName: import.meta.env.VITE_AZURE_ML_DEPLOYMENT_NAME
   },
   // Local fallback endpoint
   local: {
-    url: "https://localhost:5000/api/hybrid-recommender/recommend"
+    url: import.meta.env.VITE_RECOMMENDATIONS_API_URL + '/recommend'
   }
 };
 
