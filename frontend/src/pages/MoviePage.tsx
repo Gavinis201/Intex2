@@ -505,6 +505,11 @@ function MoviePage() {
     }
   };
 
+  // Add useEffect to scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="movie-page">
       <div className="hero-container">
