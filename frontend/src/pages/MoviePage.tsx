@@ -11,6 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 import comingSoon from '../assets/images/ComingSoon.png';
 import mainPage from '../assets/images/Jaws1.avif';
 import Cookies from 'js-cookie';
+import { getRecommendations } from '../api/RecommendationAPI';
 
 type Movie = {
   showId: string;
@@ -444,29 +445,15 @@ function MoviePage() {
     setLoadingRecommendations(true);
     try {
       console.log(`Fetching recommendations for movie ID: ${showId}`);
+      const userId = getUserId();
+      console.log(`User ID for recommendations: ${userId || 'none'}`);
 
-      const response = await fetch(
-        'https://localhost:5000/api/hybrid-recommender/recommend',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            show_id: showId,
-            top_n: 5,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch recommendations: ${response.status} ${response.statusText}`
-        );
-      }
-
-      const data = await response.json();
-      console.log('Recommendations received:', data);
+      // Get recommendations from API service
+      const data = await getRecommendations({
+        show_id: showId,
+        user_id: userId ? parseInt(userId) : null,
+        top_n: 5,
+      });
 
       // Map through the recommendations and try to find matching posters in allMovies
       const enhancedRecommendations = await Promise.all(
