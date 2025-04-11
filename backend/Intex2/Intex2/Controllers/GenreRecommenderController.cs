@@ -8,13 +8,13 @@ using Intex2.Models;
 [ApiController]
 public class GenreRecommenderController : ControllerBase
 {
-    private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<GenreRecommenderController> _logger;
 
-    public GenreRecommenderController(IConfiguration configuration)
+    public GenreRecommenderController(IConfiguration configuration, ILogger<GenreRecommenderController> logger)
     {
-        _httpClient = new HttpClient();
         _configuration = configuration;
+        _logger = logger;
     }
 
     [HttpPost("recommend")]
@@ -22,13 +22,22 @@ public class GenreRecommenderController : ControllerBase
     {
         try
         {
-            Console.WriteLine($"[INFO] Genre request received: title={input.title}, top_n={input.top_n}");
+            _logger.LogInformation($"[INFO] Genre request received: title={input.title}, top_n={input.top_n}");
 
-            var endpoint = _configuration["GENRE_RECOMMENDER_URL"];
-            var apiKey = _configuration["GENRE_RECOMMENDER_TOKEN"];
+            var endpoint = Environment.GetEnvironmentVariable("GENRE_RECOMMENDER_URL");
+            var apiKey = Environment.GetEnvironmentVariable("GENRE_RECOMMENDER_TOKEN");
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-            _httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");
+            if (string.IsNullOrEmpty(endpoint))
+            {
+                _logger.LogError("Genre recommender endpoint not configured");
+                return StatusCode(500, "Genre recommender endpoint not configured");
+            }
+
+            // Create a new HttpClient for this request
+            using var httpClient = new HttpClient();
+            
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+            httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");
 
             // Convert from our API format to the format expected by Azure ML
             var azureRequest = new GenreMLRequest
@@ -40,12 +49,21 @@ public class GenreRecommenderController : ControllerBase
             var jsonPayload = JsonSerializer.Serialize(azureRequest);
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            Console.WriteLine($"[INFO] Sending to Azure ML: {jsonPayload}");
-            var response = await _httpClient.PostAsync(endpoint, content);
+            _logger.LogInformation($"[INFO] Sending to Azure ML: {jsonPayload}");
+            _logger.LogInformation($"[INFO] Azure ML Endpoint: {endpoint}");
+
+            // Ensure endpoint is an absolute URI
+            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out Uri endpointUri))
+            {
+                _logger.LogError($"Invalid endpoint URI: {endpoint}");
+                return StatusCode(500, $"Invalid endpoint URI format: {endpoint}");
+            }
+
+            var response = await httpClient.PostAsync(endpointUri, content);
             var responseString = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine($"[INFO] AzureML Genre Status: {response.StatusCode}");
-            Console.WriteLine($"[INFO] AzureML Genre Response: {responseString}");
+            _logger.LogInformation($"[INFO] AzureML Genre Status: {response.StatusCode}");
+            _logger.LogInformation($"[INFO] AzureML Genre Response: {responseString}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -56,7 +74,7 @@ public class GenreRecommenderController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] {ex.Message}\n{ex.StackTrace}");
+            _logger.LogError($"[ERROR] {ex.Message}\n{ex.StackTrace}");
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }

@@ -8,13 +8,13 @@ using Intex2.Models;
 [ApiController]
 public class RecommenderController : ControllerBase
 {
-    private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<RecommenderController> _logger;
 
-    public RecommenderController(IConfiguration configuration)
+    public RecommenderController(IConfiguration configuration, ILogger<RecommenderController> logger)
     {
-        _httpClient = new HttpClient();
         _configuration = configuration;
+        _logger = logger;
     }
 
     // Removed internal RecommendationRequest class - now using shared model
@@ -24,22 +24,41 @@ public class RecommenderController : ControllerBase
     {
         try
         {
-            Console.WriteLine($"[INFO] Request received: title={input.title}, top_n={input.top_n}");
+            _logger.LogInformation($"[INFO] Request received: title={input.title}, top_n={input.top_n}");
 
-            var endpoint = _configuration["MOVIE_RECOMMENDER_URL"];
-            var apiKey = _configuration["MOVIE_RECOMMENDER_TOKEN"];
+            var endpoint = Environment.GetEnvironmentVariable("MOVIE_RECOMMENDER_URL");
+            var apiKey = Environment.GetEnvironmentVariable("MOVIE_RECOMMENDER_TOKEN");
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-            _httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");
+            if (string.IsNullOrEmpty(endpoint))
+            {
+                _logger.LogError("Movie recommender endpoint not configured");
+                return StatusCode(500, "Movie recommender endpoint not configured");
+            }
+
+            // Create a new HttpClient for this request
+            using var httpClient = new HttpClient();
+            
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+            httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");
 
             var jsonPayload = JsonSerializer.Serialize(input);
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(endpoint, content);
+            _logger.LogInformation($"[INFO] Sending to Azure ML: {jsonPayload}");
+            _logger.LogInformation($"[INFO] Azure ML Endpoint: {endpoint}");
+
+            // Ensure endpoint is an absolute URI
+            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out Uri endpointUri))
+            {
+                _logger.LogError($"Invalid endpoint URI: {endpoint}");
+                return StatusCode(500, $"Invalid endpoint URI format: {endpoint}");
+            }
+
+            var response = await httpClient.PostAsync(endpointUri, content);
             var responseString = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine($"[INFO] AzureML Status: {response.StatusCode}");
-            Console.WriteLine($"[INFO] AzureML Response: {responseString}");
+            _logger.LogInformation($"[INFO] AzureML Status: {response.StatusCode}");
+            _logger.LogInformation($"[INFO] AzureML Response: {responseString}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -50,7 +69,7 @@ public class RecommenderController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] {ex.Message}\n{ex.StackTrace}");
+            _logger.LogError($"[ERROR] {ex.Message}\n{ex.StackTrace}");
             return StatusCode(500, $"Internal Server Error: {ex.Message}");
         }
     }

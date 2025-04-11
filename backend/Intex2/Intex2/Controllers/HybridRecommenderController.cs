@@ -7,13 +7,11 @@ using System.Text;
 [ApiController]
 public class HybridRecommenderController : ControllerBase
 {
-    private readonly HttpClient _httpClient;
     private readonly ILogger<HybridRecommenderController> _logger;
     private readonly IConfiguration _configuration;
 
     public HybridRecommenderController(ILogger<HybridRecommenderController> logger, IConfiguration configuration)
     {
-        _httpClient = new HttpClient();
         _logger = logger;
         _configuration = configuration;
     }
@@ -31,19 +29,36 @@ public class HybridRecommenderController : ControllerBase
         try
         {
             _logger.LogInformation($"[INFO] Hybrid recommendation request received: show_id={input.show_id}, top_n={input.top_n}");
-            Console.WriteLine($"[INFO] Hybrid recommendation request received: show_id={input.show_id}, top_n={input.top_n}");
 
-            var endpoint = _configuration["HYBRID_RECOMMENDER_URL"];
-            var apiKey = _configuration["HYBRID_RECOMMENDER_TOKEN"];
+            var endpoint = Environment.GetEnvironmentVariable("HYBRID_RECOMMENDER_URL");
+            var apiKey = Environment.GetEnvironmentVariable("HYBRID_RECOMMENDER_TOKEN");
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-            _httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");
+            if (string.IsNullOrEmpty(endpoint))
+            {
+                _logger.LogError("Hybrid recommender endpoint not configured");
+                return StatusCode(500, "Hybrid recommender endpoint not configured");
+            }
+
+            // Create a new HttpClient for this request
+            using var httpClient = new HttpClient();
+            
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+            httpClient.DefaultRequestHeaders.Add("azureml-model-deployment", "default");
 
             var jsonPayload = JsonSerializer.Serialize(input);
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
             _logger.LogInformation($"[INFO] Sending to Azure ML: {jsonPayload}");
-            var response = await _httpClient.PostAsync(endpoint, content);
+            _logger.LogInformation($"[INFO] Azure ML Endpoint: {endpoint}");
+
+            // Ensure endpoint is an absolute URI
+            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out Uri endpointUri))
+            {
+                _logger.LogError($"Invalid endpoint URI: {endpoint}");
+                return StatusCode(500, $"Invalid endpoint URI format: {endpoint}");
+            }
+
+            var response = await httpClient.PostAsync(endpointUri, content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             _logger.LogInformation($"[INFO] Azure ML Status: {response.StatusCode}");
